@@ -1,6 +1,6 @@
 # LeadPulse — Tasks
 
-## Current Phase: PLAN → BUILD (ready after initial commit)
+## Current Phase: BUILD (Phases 1-5 complete, Phase 6 in progress)
 
 ---
 
@@ -277,7 +277,12 @@
 
 ## Completed
 
-(Nothing yet — project is in PLAN phase.)
+- [x] Phase 1: Foundation (1.1-1.9) — scaffold, shadcn/ui, Supabase clients, auth, login, app shell
+- [x] Phase 2: Core Data + Ingestion (2.1-2.12) — schemas, queries, parser, Excel parser, webhook, endpoints, Server Actions, seed data
+- [x] Phase 3: Lead Management UI (3.1-3.8) — dashboard strip, lead table, status/urgency badges, filters, sorting, empty states
+- [x] Phase 4: Lead Detail + Activity (4.1-4.7) — detail drawer, editable fields, activity timeline/form, text paste, manual entry, Excel import page
+- [x] Phase 5: Real-Time + Delight (5.1-5.4) — Supabase realtime subscription, toast notifications, demo simulate button
+- [x] Phase 6 partial: About This Project modal (6.1)
 
 ---
 

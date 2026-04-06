@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import { LogOut } from "lucide-react";
+import { LogOut, Zap } from "lucide-react";
+import { toast } from "sonner";
 
 interface HeaderProps {
   userEmail: string | null;
@@ -11,12 +13,27 @@ interface HeaderProps {
 
 export function Header({ userEmail }: HeaderProps) {
   const router = useRouter();
+  const [simulating, setSimulating] = useState(false);
 
   async function handleSignOut() {
     const supabase = createClient();
     await supabase.auth.signOut();
     router.push("/login");
     router.refresh();
+  }
+
+  async function handleSimulate() {
+    setSimulating(true);
+    const res = await fetch("/api/demo/simulate", { method: "POST" });
+    const data = await res.json();
+    setSimulating(false);
+
+    if (res.ok && data.lead) {
+      toast.success(`New lead: ${data.lead.name} from ${data.lead.city ?? "unknown"}`);
+      router.refresh();
+    } else {
+      toast.error("Failed to simulate lead");
+    }
   }
 
   return (
@@ -28,8 +45,14 @@ export function Header({ userEmail }: HeaderProps) {
       </div>
 
       <div className="flex items-center gap-3">
-        <Button variant="outline" size="sm" disabled>
-          Simulate Lead
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleSimulate}
+          disabled={simulating}
+        >
+          <Zap className="mr-1 h-3 w-3" />
+          {simulating ? "Simulating..." : "Simulate Lead"}
         </Button>
 
         {userEmail && (
