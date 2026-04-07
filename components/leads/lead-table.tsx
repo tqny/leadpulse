@@ -60,10 +60,10 @@ export function LeadTable({ leads, onSelectLead, startIndex = 0 }: LeadTableProp
 
   return (
     <div className="rounded-lg border border-border bg-card overflow-x-auto">
-      <Table className="min-w-[900px]">
+      <Table>
         <TableHeader>
           <TableRow className="bg-muted hover:bg-muted">
-            <TableHead className="w-[48px] text-center text-xs font-semibold text-muted-foreground">
+            <TableHead className="hidden lg:table-cell w-[48px] text-center text-xs font-semibold text-muted-foreground">
               #
             </TableHead>
             {SORTABLE_COLUMNS.map((col) => (
@@ -71,7 +71,9 @@ export function LeadTable({ leads, onSelectLead, startIndex = 0 }: LeadTableProp
                 key={col.key}
                 className={cn(
                   "cursor-pointer select-none text-xs font-semibold uppercase tracking-wider text-muted-foreground",
-                  col.minWidth
+                  col.minWidth,
+                  col.key === "created_at" && "hidden md:table-cell",
+                  col.key === "follow_up_date" && "hidden lg:table-cell"
                 )}
                 onClick={() => toggleSort(col.key)}
               >
@@ -88,10 +90,10 @@ export function LeadTable({ leads, onSelectLead, startIndex = 0 }: LeadTableProp
                 </span>
               </TableHead>
             ))}
-            <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground min-w-[130px]">
+            <TableHead className="hidden md:table-cell text-xs font-semibold uppercase tracking-wider text-muted-foreground min-w-[130px]">
               Location
             </TableHead>
-            <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground min-w-[90px]">
+            <TableHead className="hidden lg:table-cell text-xs font-semibold uppercase tracking-wider text-muted-foreground min-w-[90px]">
               Source
             </TableHead>
             <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground min-w-[80px]">
@@ -107,7 +109,7 @@ export function LeadTable({ leads, onSelectLead, startIndex = 0 }: LeadTableProp
               onClick={() => onSelectLead(lead.id)}
             >
               {/* Row number */}
-              <TableCell className="text-center text-xs text-muted-foreground font-medium">
+              <TableCell className="hidden lg:table-cell text-center text-xs text-muted-foreground font-medium">
                 {startIndex + index + 1}
               </TableCell>
 
@@ -135,26 +137,26 @@ export function LeadTable({ leads, onSelectLead, startIndex = 0 }: LeadTableProp
               </TableCell>
 
               {/* Created date */}
-              <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
+              <TableCell className="hidden md:table-cell text-sm text-muted-foreground whitespace-nowrap">
                 {formatDate(lead.created_at)}
               </TableCell>
 
               {/* Follow-up */}
-              <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
+              <TableCell className="hidden lg:table-cell text-sm text-muted-foreground whitespace-nowrap">
                 {lead.follow_up_date
                   ? formatDate(lead.follow_up_date)
                   : "—"}
               </TableCell>
 
               {/* Location */}
-              <TableCell className="text-sm text-muted-foreground">
+              <TableCell className="hidden md:table-cell text-sm text-muted-foreground">
                 <span className="truncate block max-w-[140px]">
                   {[lead.city, lead.state].filter(Boolean).join(", ") || "—"}
                 </span>
               </TableCell>
 
               {/* Source */}
-              <TableCell>
+              <TableCell className="hidden lg:table-cell">
                 <span className="inline-flex items-center rounded-full border border-border bg-muted px-2 py-0.5 text-xs font-medium text-foreground whitespace-nowrap">
                   {SOURCE_LABELS[lead.source] ?? lead.source}
                 </span>
@@ -180,28 +182,28 @@ export function LeadTableSkeleton() {
     <div className="rounded-lg border border-border bg-card overflow-hidden">
       <div className="bg-muted px-4 py-3">
         <div className="flex gap-6">
-          <Skeleton className="h-4 w-8" />
+          <Skeleton className="hidden lg:block h-4 w-8" />
           <Skeleton className="h-4 w-24" />
           <Skeleton className="h-4 w-16" />
-          <Skeleton className="h-4 w-20" />
-          <Skeleton className="h-4 w-20" />
-          <Skeleton className="h-4 w-20" />
-          <Skeleton className="h-4 w-16" />
+          <Skeleton className="hidden md:block h-4 w-20" />
+          <Skeleton className="hidden lg:block h-4 w-20" />
+          <Skeleton className="hidden md:block h-4 w-20" />
+          <Skeleton className="hidden lg:block h-4 w-16" />
           <Skeleton className="h-4 w-16" />
         </div>
       </div>
       {Array.from({ length: 5 }).map((_, i) => (
         <div key={i} className="flex items-center gap-6 border-t border-border px-4 py-3">
-          <Skeleton className="h-4 w-6" />
+          <Skeleton className="hidden lg:block h-4 w-6" />
           <div className="space-y-1.5">
             <Skeleton className="h-4 w-28" />
             <Skeleton className="h-3 w-20" />
           </div>
           <Skeleton className="h-5 w-16 rounded-full" />
-          <Skeleton className="h-4 w-20" />
-          <Skeleton className="h-4 w-16" />
-          <Skeleton className="h-4 w-24" />
-          <Skeleton className="h-5 w-14 rounded-full" />
+          <Skeleton className="hidden md:block h-4 w-20" />
+          <Skeleton className="hidden lg:block h-4 w-16" />
+          <Skeleton className="hidden md:block h-4 w-24" />
+          <Skeleton className="hidden lg:block h-5 w-14 rounded-full" />
           <Skeleton className="h-5 w-14 rounded-full" />
         </div>
       ))}

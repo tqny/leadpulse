@@ -60,12 +60,12 @@ export function LeadFilters() {
   );
 
   return (
-    <div className="flex flex-wrap items-center gap-3 bg-card border border-border p-3">
+    <div className="flex flex-wrap items-center gap-2 sm:gap-3 bg-card border border-border p-2 sm:p-3">
       <Select
         value={currentTimeframe}
         onValueChange={(v) => setParam("timeframe", v ?? "")}
       >
-        <SelectTrigger className="w-[160px]">
+        <SelectTrigger className="w-full sm:w-[160px]">
           <Calendar className="mr-1 h-3 w-3 text-muted-foreground" />
           <SelectValue placeholder="Last Month" />
         </SelectTrigger>
@@ -82,7 +82,7 @@ export function LeadFilters() {
         value={currentStatus}
         onValueChange={(v) => setParam("status", v ?? "")}
       >
-        <SelectTrigger className="w-[160px]">
+        <SelectTrigger className="w-[calc(50%-4px)] sm:w-[160px]">
           <SelectValue placeholder="All statuses" />
         </SelectTrigger>
         <SelectContent>
@@ -98,7 +98,7 @@ export function LeadFilters() {
         value={currentSource}
         onValueChange={(v) => setParam("source", v ?? "")}
       >
-        <SelectTrigger className="w-[160px]">
+        <SelectTrigger className="w-[calc(50%-4px)] sm:w-[160px]">
           <SelectValue placeholder="All sources" />
         </SelectTrigger>
         <SelectContent>
@@ -114,7 +114,7 @@ export function LeadFilters() {
         value={currentFollowUp}
         onValueChange={(v) => setParam("followUp", v ?? "")}
       >
-        <SelectTrigger className="w-[160px]">
+        <SelectTrigger className="w-[calc(50%-4px)] sm:w-[160px]">
           <SelectValue placeholder="Follow-up" />
         </SelectTrigger>
         <SelectContent>

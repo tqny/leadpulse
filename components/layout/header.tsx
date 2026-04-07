@@ -4,14 +4,15 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import { LogOut, Zap } from "lucide-react";
+import { LogOut, Zap, Menu } from "lucide-react";
 import { toast } from "sonner";
 
 interface HeaderProps {
   userEmail: string | null;
+  onMobileNavToggle?: () => void;
 }
 
-export function Header({ userEmail }: HeaderProps) {
+export function Header({ userEmail, onMobileNavToggle }: HeaderProps) {
   const router = useRouter();
   const [simulating, setSimulating] = useState(false);
 
@@ -37,14 +38,23 @@ export function Header({ userEmail }: HeaderProps) {
   }
 
   return (
-    <header className="flex h-14 items-center justify-between border-b border-border bg-card px-6">
-      <div className="flex items-center gap-4">
-        <h1 className="text-sm font-medium text-muted-foreground">
+    <header className="flex h-14 items-center justify-between border-b border-border bg-card px-3 sm:px-6">
+      <div className="flex items-center gap-3">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 text-muted-foreground md:hidden"
+          onClick={onMobileNavToggle}
+          aria-label="Open navigation"
+        >
+          <Menu className="h-5 w-5" />
+        </Button>
+        <h1 className="text-sm font-medium text-muted-foreground hidden sm:block">
           Lead Management
         </h1>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
         <Button
           variant="outline"
           size="sm"
@@ -52,11 +62,12 @@ export function Header({ userEmail }: HeaderProps) {
           disabled={simulating}
         >
           <Zap className="mr-1 h-3 w-3" />
-          {simulating ? "Simulating..." : "Simulate Lead"}
+          <span className="hidden sm:inline">{simulating ? "Simulating..." : "Simulate Lead"}</span>
+          <span className="sm:hidden">{simulating ? "..." : "Demo"}</span>
         </Button>
 
         {userEmail && (
-          <span className="text-sm text-muted-foreground">{userEmail}</span>
+          <span className="hidden lg:inline text-sm text-muted-foreground">{userEmail}</span>
         )}
 
         <Button
