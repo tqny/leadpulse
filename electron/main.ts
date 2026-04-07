@@ -8,6 +8,13 @@ import { restoreWindowState, trackWindowState } from "./window-state";
 import { setupMenu, prefsStore } from "./menu";
 import { setupNotifications, handleNewLead, initBadgeClearing } from "./notifications";
 
+// ── Single Instance Lock ──────────────────────────────────────────────────────
+
+const gotLock = app.requestSingleInstanceLock();
+if (!gotLock) {
+  app.quit();
+}
+
 // ── State ──────────────────────────────────────────────────────────────────────
 
 export let mainWindow: BrowserWindow | null = null;
@@ -70,16 +77,17 @@ async function startServer(): Promise<number> {
   }
 
   const port = await getPort({ portRange: [3100, 3999] });
-  const standalonePath = path.join(
+  const standaloneDir = path.join(
     process.resourcesPath ?? path.join(__dirname, ".."),
     ".next",
-    "standalone",
-    "server.js"
+    "standalone"
   );
 
-  serverProcess = spawn(process.execPath, [standalonePath], {
+  serverProcess = spawn(process.execPath, ["server.js"], {
+    cwd: standaloneDir,
     env: {
       ...process.env,
+      ELECTRON_RUN_AS_NODE: "1",
       PORT: port.toString(),
       HOSTNAME: "localhost",
     },
@@ -185,11 +193,29 @@ async function createMainWindow(): Promise<void> {
 
   mainWindow = new BrowserWindow(windowOpts);
 
-  // Inject CSS for titlebar padding (hiddenInset overlap fix)
+  // Inject CSS for titlebar: drag region + padding for traffic lights
   mainWindow.webContents.on("did-finish-load", () => {
-    mainWindow?.webContents.insertCSS(
-      "body { padding-top: 28px !important; }"
-    );
+    mainWindow?.webContents.insertCSS(`
+      body { padding-top: 38px !important; }
+      body::before {
+        content: '';
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 38px;
+        -webkit-app-region: drag;
+        z-index: 9999;
+      }
+      body::before ~ * button,
+      body::before ~ * a,
+      body::before ~ * input,
+      body::before ~ * select,
+      body::before ~ * textarea {
+        -webkit-app-region: no-drag;
+      }
+    `);
   });
 
   mainWindow.on("ready-to-show", () => {
@@ -274,6 +300,13 @@ function setupRealtimeSubscription(): void {
 }
 
 // ── App Lifecycle ──────────────────────────────────────────────────────────────
+
+app.on("second-instance", () => {
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.focus();
+  }
+});
 
 app.on("ready", async () => {
   // Load env vars from .env.local in dev
