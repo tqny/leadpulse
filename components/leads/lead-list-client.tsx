@@ -27,28 +27,40 @@ export function LeadListClient({
   const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [activities, setActivities] = useState<Activity[]>([]);
+  const [activitiesLoading, setActivitiesLoading] = useState(false);
+  const [activitiesError, setActivitiesError] = useState(false);
+
+  const fetchActivities = async (leadId: string) => {
+    setActivitiesLoading(true);
+    setActivitiesError(false);
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("activities")
+        .select("*")
+        .eq("lead_id", leadId)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      setActivities((data as Activity[]) ?? []);
+    } catch {
+      setActivitiesError(true);
+      setActivities([]);
+    } finally {
+      setActivitiesLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (!selectedLeadId) {
       setSelectedLead(null);
       setActivities([]);
+      setActivitiesError(false);
       return;
     }
 
     const lead = leads.find((l) => l.id === selectedLeadId) ?? null;
     setSelectedLead(lead);
-
-    async function fetchActivities() {
-      const supabase = createClient();
-      const { data } = await supabase
-        .from("activities")
-        .select("*")
-        .eq("lead_id", selectedLeadId)
-        .order("created_at", { ascending: false });
-      setActivities((data as Activity[]) ?? []);
-    }
-
-    fetchActivities();
+    fetchActivities(selectedLeadId);
   }, [selectedLeadId, leads]);
 
   return (
@@ -74,6 +86,9 @@ export function LeadListClient({
       <LeadDetailDrawer
         lead={selectedLead}
         activities={activities}
+        activitiesLoading={activitiesLoading}
+        activitiesError={activitiesError}
+        onRetryActivities={() => selectedLeadId && fetchActivities(selectedLeadId)}
         open={!!selectedLeadId}
         onClose={() => setSelectedLeadId(null)}
       />

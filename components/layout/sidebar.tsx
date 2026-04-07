@@ -12,35 +12,44 @@ const navItems = [
   { href: "/import", label: "Import", icon: Upload, color: "text-teal-500" },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  mobile?: boolean;
+  onNavigate?: () => void;
+}
+
+export function Sidebar({ mobile, onNavigate }: SidebarProps) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+
+  const showLabels = mobile || !collapsed;
 
   return (
     <aside
       className={cn(
-        "flex flex-col border-r border-sidebar-border bg-sidebar transition-all duration-200",
-        collapsed ? "w-16" : "w-60"
+        "flex h-full flex-col border-r border-sidebar-border bg-sidebar transition-all duration-200",
+        mobile ? "w-60" : collapsed ? "w-16" : "w-60"
       )}
     >
       <div className="flex h-14 items-center justify-between border-b border-sidebar-border px-3">
-        {!collapsed && (
+        {showLabels && (
           <span className="text-lg font-semibold text-foreground">
             LeadPulse
           </span>
         )}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 text-muted-foreground"
-          onClick={() => setCollapsed(!collapsed)}
-        >
-          {collapsed ? (
-            <ChevronRight className="h-4 w-4" />
-          ) : (
-            <ChevronLeft className="h-4 w-4" />
-          )}
-        </Button>
+        {!mobile && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-muted-foreground"
+            onClick={() => setCollapsed(!collapsed)}
+          >
+            {collapsed ? (
+              <ChevronRight className="h-4 w-4" />
+            ) : (
+              <ChevronLeft className="h-4 w-4" />
+            )}
+          </Button>
+        )}
       </div>
 
       <nav className="flex-1 space-y-1 p-2">
@@ -50,6 +59,7 @@ export function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
+              onClick={onNavigate}
               className={cn(
                 "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                 isActive
@@ -58,7 +68,7 @@ export function Sidebar() {
               )}
             >
               <item.icon className={cn("h-4 w-4 shrink-0", item.color)} />
-              {!collapsed && <span>{item.label}</span>}
+              {showLabels && <span>{item.label}</span>}
             </Link>
           );
         })}
@@ -67,7 +77,7 @@ export function Sidebar() {
       <div className="border-t border-sidebar-border p-3">
         <div className="flex items-center gap-2">
           <Hammer className="h-4 w-4 shrink-0 text-amber-700" />
-          {!collapsed && (
+          {showLabels && (
             <span className="text-xs font-bold uppercase tracking-widest text-amber-700">
               Epoxy Bros
             </span>

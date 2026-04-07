@@ -61,12 +61,12 @@ export function LeadFilters() {
   );
 
   return (
-    <div className="flex flex-wrap items-center gap-3 bg-card border border-border p-3 transition-all duration-200 hover:shadow-md hover:border-foreground/30">
+    <div className="flex flex-wrap items-center gap-2 sm:gap-3 bg-card border border-border p-2 sm:p-3 transition-all duration-200 hover:shadow-md hover:border-foreground/30">
       <Select
         value={currentTimeframe ?? "last_month"}
         onValueChange={(v) => setParam("timeframe", v === "last_month" ? "" : v ?? "")}
       >
-        <SelectTrigger className="w-[160px] border-foreground transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+        <SelectTrigger className="w-full sm:w-[160px] border-foreground transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
           <Calendar className="mr-1 h-3 w-3 text-muted-foreground" />
           <SelectValue>
             {TIMEFRAME_LABELS[(currentTimeframe ?? "last_month") as Timeframe] ?? "Last Month"}
@@ -85,7 +85,7 @@ export function LeadFilters() {
         value={currentStatus ?? "all"}
         onValueChange={(v) => setParam("status", v === "all" ? "" : v ?? "")}
       >
-        <SelectTrigger className="w-[160px] border-foreground transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+        <SelectTrigger className="w-[calc(50%-4px)] sm:w-[160px] border-foreground transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
           <SelectValue>
             {currentStatus ? STATUS_LABELS[currentStatus as LeadStatus] : "All Statuses"}
           </SelectValue>
@@ -104,7 +104,7 @@ export function LeadFilters() {
         value={currentSource ?? "all"}
         onValueChange={(v) => setParam("source", v === "all" ? "" : v ?? "")}
       >
-        <SelectTrigger className="w-[160px] border-foreground transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+        <SelectTrigger className="w-[calc(50%-4px)] sm:w-[160px] border-foreground transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
           <SelectValue>
             {currentSource ? (SOURCE_LABELS[currentSource] ?? currentSource) : "All Sources"}
           </SelectValue>
@@ -123,7 +123,7 @@ export function LeadFilters() {
         value={currentFollowUp ?? "all"}
         onValueChange={(v) => setParam("followUp", v === "all" ? "" : v ?? "")}
       >
-        <SelectTrigger className="w-[160px] border-foreground transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+        <SelectTrigger className="w-[calc(50%-4px)] sm:w-[160px] border-foreground transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
           <SelectValue>
             {currentFollowUp === "overdue" ? "Overdue" : currentFollowUp === "today" ? "Today" : currentFollowUp === "this_week" ? "This Week" : "All Follow-ups"}
           </SelectValue>
