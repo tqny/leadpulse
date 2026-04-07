@@ -36,6 +36,9 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-elevated: var(--elevated);
+  --color-elevated-foreground: var(--elevated-foreground);
+  --color-surface-inset: var(--surface-inset);
   --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
   --font-sans: var(--font-oxanium);
   --font-mono: "Source Code Pro", monospace;
@@ -50,36 +53,40 @@
 }
 
 :root {
-  --card: #b0b0b0;
+  /* ── Depth Hierarchy (light): L0 bg → L1 card → L2 elevated → L3 popover ── */
+  --background: #b8b8b8;          /* Level 0 — deepest, page bg */
+  --card: #c4c4c4;                /* Level 1 — cards, surfaces */
+  --elevated: #d0d0d0;            /* Level 2 — drawers, dialogs, active sections */
+  --popover: #dadada;             /* Level 3 — dropdowns, tooltips */
+  --surface-inset: #b0b0b0;       /* Recessed within cards (input wells, inset areas) */
+  --muted: #acacac;               /* Subtle backgrounds, hover states */
+  --input: #d2d2d2;               /* Input field backgrounds */
+  --border: #8a8a8a;              /* Borders between depth levels */
   --ring: #b71c1c;
-  --input: #505050;
-  --muted: #b8b8b8;
   --accent: #4682b4;
-  --border: #505050;
   --radius: 0px;
   --chart-1: #b71c1c;
   --chart-2: #556b2f;
   --chart-3: #4682b4;
   --chart-4: #ff6f00;
   --chart-5: #8d6e63;
-  --popover: #b0b0b0;
   --primary: #b71c1c;
-  --sidebar: #b0b0b0;
+  --sidebar: #b0b0b0;             /* Sidebar — distinct from card, between bg and card */
   --spacing: 0.25rem;
   --secondary: #556b2f;
-  --background: #cccccc;
-  --foreground: #1f1f1f;
+  --foreground: #1a1a1a;
   --destructive: #ff6f00;
   --sidebar-ring: #b71c1c;
   --sidebar-accent: #4682b4;
-  --sidebar-border: #505050;
-  --card-foreground: #1f1f1f;
+  --sidebar-border: #8a8a8a;
+  --card-foreground: #1a1a1a;
+  --elevated-foreground: #1a1a1a;
   --sidebar-primary: #b71c1c;
   --muted-foreground: #4a4a4a;
   --accent-foreground: #ffffff;
-  --popover-foreground: #1f1f1f;
+  --popover-foreground: #1a1a1a;
   --primary-foreground: #ffffff;
-  --sidebar-foreground: #1f1f1f;
+  --sidebar-foreground: #1a1a1a;
   --secondary-foreground: #ffffff;
   --destructive-foreground: #000000;
   --sidebar-accent-foreground: #ffffff;
@@ -87,30 +94,34 @@
 }
 
 .dark {
-  --card: #2a2a2a;
+  /* ── Depth Hierarchy (dark): L0 bg → L1 card → L2 elevated → L3 popover ── */
+  --background: #161616;          /* Level 0 — deepest */
+  --card: #222222;                /* Level 1 — cards, surfaces */
+  --elevated: #2c2c2c;            /* Level 2 — drawers, dialogs */
+  --popover: #343434;             /* Level 3 — dropdowns, tooltips */
+  --surface-inset: #1a1a1a;       /* Recessed within cards */
+  --muted: #1c1c1c;               /* Subtle backgrounds */
+  --input: #2a2a2a;               /* Input field backgrounds */
+  --border: #3c3c3c;              /* Borders between depth levels */
   --ring: #e53935;
-  --input: #4a4a4a;
-  --muted: #252525;
   --accent: #64b5f6;
-  --border: #4a4a4a;
   --radius: 0px;
   --chart-1: #e53935;
   --chart-2: #689f38;
   --chart-3: #64b5f6;
   --chart-4: #ffa000;
   --chart-5: #a1887f;
-  --popover: #2a2a2a;
   --primary: #e53935;
-  --sidebar: #141414;
+  --sidebar: #111111;             /* Sidebar — own depth level */
   --spacing: 0.25rem;
   --secondary: #689f38;
-  --background: #1a1a1a;
   --foreground: #e0e0e0;
   --destructive: #ffa000;
   --sidebar-ring: #e53935;
   --sidebar-accent: #64b5f6;
-  --sidebar-border: #4a4a4a;
+  --sidebar-border: #3c3c3c;
   --card-foreground: #e0e0e0;
+  --elevated-foreground: #e0e0e0;
   --sidebar-primary: #e53935;
   --muted-foreground: #a0a0a0;
   --accent-foreground: #000000;
