@@ -103,7 +103,7 @@ export function LeadTable({ leads, onSelectLead, startIndex = 0 }: LeadTableProp
           {leads.map((lead, index) => (
             <TableRow
               key={lead.id}
-              className="cursor-pointer hover:bg-elevated transition-colors"
+              className="cursor-pointer hover:bg-elevated transition-all duration-200 hover:shadow-sm"
               onClick={() => onSelectLead(lead.id)}
             >
               {/* Row number */}
@@ -154,10 +154,8 @@ export function LeadTable({ leads, onSelectLead, startIndex = 0 }: LeadTableProp
               </TableCell>
 
               {/* Source */}
-              <TableCell>
-                <span className="inline-flex items-center rounded-full border border-border bg-muted px-2 py-0.5 text-xs font-medium text-foreground whitespace-nowrap">
-                  {SOURCE_LABELS[lead.source] ?? lead.source}
-                </span>
+              <TableCell className="text-sm text-muted-foreground">
+                {SOURCE_LABELS[lead.source] ?? lead.source}
               </TableCell>
 
               {/* Urgency */}
