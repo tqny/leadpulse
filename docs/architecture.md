@@ -12,6 +12,7 @@
 | Auth | Supabase Auth | Email/password for single operator, integrates with RLS |
 | Validation | Zod | Schema validation for webhook payloads, parser input, form data |
 | Deployment | Vercel (free tier) | Zero-config Next.js deploy, serverless functions for API routes |
+| Desktop | Electron | Embeds Next.js standalone server, native macOS integration |
 
 No charting library needed for MVP. Dashboard summary strip uses simple computed values, not charts.
 
@@ -339,6 +340,31 @@ Message: {message}
 - Unknown keys → ignore
 - "City and State" with no " and " separator → store whole string as city, state as null
 
+### 5. Desktop Layer (Electron)
+
+**Responsibility:** Package the web app as a native macOS desktop application.
+
+**Architecture:** Electron spawns the Next.js standalone server as a child process on a free port, then loads it in a BrowserWindow. All server components, server actions, middleware, and API routes work identically — zero code changes to the web app.
+
+**Key files:**
+- `electron/main.ts` — Main process: server lifecycle, window management, Supabase realtime bridge for native notifications
+- `electron/preload.ts` — IPC bridge (new lead events, app version, auto-launch toggle)
+- `electron/menu.ts` — macOS app menu (Edit for copy/paste, auto-launch checkbox)
+- `electron/notifications.ts` — Native macOS notifications + dock badge on new leads
+- `electron/window-state.ts` — Persist/restore window bounds across launches
+- `electron/splash.html` — Branded loading screen during server boot
+- `electron/build.mjs` — esbuild script that bundles all Electron code + deps into single files
+- `electron-builder.yml` — Packaging config (macOS dmg/zip targets)
+
+**Native features:**
+- `titleBarStyle: 'hiddenInset'` — native macOS traffic light buttons
+- `electron-store` — persists window state and preferences
+- `Notification` API — system notifications when leads arrive (even if app is background)
+- `app.dock.setBadge()` — dock badge count, cleared on focus
+- `app.setLoginItemSettings()` — auto-launch on login (packaged builds only)
+
+**Build flow:** `next build` (standalone) → `esbuild` (bundle electron/) → `electron-builder` (package .app/.dmg)
+
 ## Folder Structure
 
 ```
@@ -403,6 +429,16 @@ leadpulse/
 │   └── utils/
 │       ├── urgency.ts                # Response timer calculations
 │       └── format.ts                 # Date/currency formatting
+├── electron/
+│   ├── main.ts                       # Electron main process
+│   ├── preload.ts                    # IPC bridge
+│   ├── menu.ts                       # macOS app menu
+│   ├── notifications.ts              # Native notifications + dock badge
+│   ├── window-state.ts               # Window bounds persistence
+│   ├── types.ts                      # Shared IPC types
+│   ├── splash.html                   # Loading screen
+│   └── build.mjs                     # esbuild bundler script
+├── electron-builder.yml              # Desktop packaging config
 ├── middleware.ts                      # Auth route protection
 ├── docs/
 │   ├── spec.md
@@ -430,6 +466,10 @@ leadpulse/
 | shadcn/ui components | UI primitives (installed individually) | Yes |
 | date-fns | Date formatting/calculation | Yes |
 | xlsx (SheetJS) | Server-side .xlsx parsing for Excel import | Yes |
+| electron | Desktop app shell (dev dep) | Desktop only |
+| electron-builder | Package .app/.dmg (dev dep) | Desktop only |
+| electron-store | Window state + preferences persistence | Desktop only |
+| get-port-please | Find free port for embedded server | Desktop only |
 
 ## Swap Points
 

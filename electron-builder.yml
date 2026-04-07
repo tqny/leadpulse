@@ -1,0 +1,26 @@
+appId: com.leadpulse.desktop
+productName: LeadPulse
+directories:
+  output: release
+mac:
+  category: public.app-category.business
+  target:
+    - dmg
+    - zip
+  icon: build/icon.icns
+files:
+  - electron/dist/main.js
+  - electron/dist/preload.js
+  - package.json
+  - "!node_modules"
+extraResources:
+  - from: .next/standalone
+    to: .next/standalone
+  - from: .next/static
+    to: .next/standalone/.next/static
+  - from: public
+    to: .next/standalone/public
+  - from: electron/splash.html
+    to: electron/splash.html
+npmRebuild: false
+asar: true
