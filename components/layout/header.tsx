@@ -37,9 +37,9 @@ export function Header({ userEmail }: HeaderProps) {
   }
 
   return (
-    <header className="flex h-14 items-center justify-between border-b border-slate-200 bg-white px-6">
+    <header className="flex h-14 items-center justify-between border-b border-border bg-card px-6">
       <div className="flex items-center gap-4">
-        <h1 className="text-sm font-medium text-slate-500">
+        <h1 className="text-sm font-medium text-muted-foreground">
           Lead Management
         </h1>
       </div>
@@ -56,13 +56,13 @@ export function Header({ userEmail }: HeaderProps) {
         </Button>
 
         {userEmail && (
-          <span className="text-sm text-slate-500">{userEmail}</span>
+          <span className="text-sm text-muted-foreground">{userEmail}</span>
         )}
 
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8 text-slate-500"
+          className="h-8 w-8 text-muted-foreground"
           onClick={handleSignOut}
         >
           <LogOut className="h-4 w-4" />

@@ -47,3 +47,15 @@ export async function updateLeadFields(
   revalidatePath("/leads");
   return { success: true };
 }
+
+export async function deleteLead(leadId: string) {
+  const supabase = await createClient();
+  const { error } = await supabase.from("leads").delete().eq("id", leadId);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  revalidatePath("/leads");
+  return { success: true };
+}

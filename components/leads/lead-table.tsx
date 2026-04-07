@@ -50,7 +50,7 @@ export function LeadTable({ leads, onSelectLead }: LeadTableProps) {
   }
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-white">
+    <div className="rounded-lg border border-border bg-card">
       <Table>
         <TableHeader>
           <TableRow>
@@ -66,8 +66,8 @@ export function LeadTable({ leads, onSelectLead }: LeadTableProps) {
                     className={cn(
                       "h-3 w-3",
                       currentSort === col.key
-                        ? "text-slate-900"
-                        : "text-slate-300"
+                        ? "text-foreground"
+                        : "text-muted-foreground"
                     )}
                   />
                 </span>
@@ -83,14 +83,14 @@ export function LeadTable({ leads, onSelectLead }: LeadTableProps) {
           {leads.map((lead) => (
             <TableRow
               key={lead.id}
-              className="cursor-pointer hover:bg-slate-50"
+              className="cursor-pointer hover:bg-muted"
               onClick={() => onSelectLead(lead.id)}
             >
               <TableCell className="font-medium">{lead.name}</TableCell>
-              <TableCell className="text-slate-500 text-sm">
+              <TableCell className="text-muted-foreground text-sm">
                 {formatDate(lead.created_at)}
               </TableCell>
-              <TableCell className="text-slate-500 text-sm">
+              <TableCell className="text-muted-foreground text-sm">
                 {lead.follow_up_date ? formatDate(lead.follow_up_date) : "—"}
               </TableCell>
               <TableCell onClick={(e) => e.stopPropagation()}>
@@ -99,10 +99,10 @@ export function LeadTable({ leads, onSelectLead }: LeadTableProps) {
               <TableCell className="text-sm">
                 {lead.phone ? formatPhone(lead.phone) : "—"}
               </TableCell>
-              <TableCell className="text-sm text-slate-500">
+              <TableCell className="text-sm text-muted-foreground">
                 {[lead.city, lead.state].filter(Boolean).join(", ") || "—"}
               </TableCell>
-              <TableCell className="text-xs text-slate-400">
+              <TableCell className="text-xs text-muted-foreground">
                 {lead.source === "facebook_webhook"
                   ? "Facebook"
                   : lead.source === "text_paste"

@@ -40,7 +40,7 @@ export default async function LeadsPage({ searchParams }: LeadsPageProps) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-slate-900">Leads</h2>
+        <h2 className="text-xl font-semibold text-foreground">Leads</h2>
         <LeadIntakeForm />
       </div>
 
