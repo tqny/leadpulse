@@ -59,9 +59,9 @@ export function LeadListClient({ leads }: LeadListClientProps) {
 
 function EmptyState() {
   return (
-    <div className="rounded-lg border border-dashed border-slate-300 bg-white px-6 py-12 text-center">
-      <p className="text-sm font-medium text-slate-900">No leads yet</p>
-      <p className="mt-1 text-sm text-slate-500">
+    <div className="rounded-lg border border-dashed border-border bg-card px-6 py-12 text-center">
+      <p className="text-sm font-medium text-foreground">No leads yet</p>
+      <p className="mt-1 text-sm text-muted-foreground">
         Leads will appear here when they arrive via Facebook, text paste, or
         Excel import.
       </p>

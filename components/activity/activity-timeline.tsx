@@ -19,7 +19,7 @@ interface ActivityTimelineProps {
 export function ActivityTimeline({ activities }: ActivityTimelineProps) {
   if (activities.length === 0) {
     return (
-      <p className="text-sm text-slate-400 py-4">No activity yet.</p>
+      <p className="text-sm text-muted-foreground py-4">No activity yet.</p>
     );
   }
 
@@ -30,23 +30,23 @@ export function ActivityTimeline({ activities }: ActivityTimelineProps) {
         return (
           <div key={activity.id} className="flex gap-3 py-2">
             <div className="flex flex-col items-center">
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100">
-                <Icon className="h-3 w-3 text-slate-500" />
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-muted">
+                <Icon className="h-3 w-3 text-muted-foreground" />
               </div>
               {i < activities.length - 1 && (
-                <div className="w-px flex-1 bg-slate-200 mt-1" />
+                <div className="w-px flex-1 bg-muted mt-1" />
               )}
             </div>
             <div className="flex-1 pb-2">
-              <p className="text-sm font-medium text-slate-700">
+              <p className="text-sm font-medium text-foreground">
                 {ACTIVITY_TYPE_LABELS[activity.type]}
               </p>
               {activity.content && (
-                <p className="mt-0.5 text-sm text-slate-500">
+                <p className="mt-0.5 text-sm text-muted-foreground">
                   {activity.content}
                 </p>
               )}
-              <p className="mt-0.5 text-xs text-slate-400">
+              <p className="mt-0.5 text-xs text-muted-foreground">
                 {formatRelativeTime(activity.created_at)}
               </p>
             </div>

@@ -64,14 +64,14 @@ export function ExcelUploadForm() {
     <div className="max-w-lg space-y-6">
       {/* Drop zone */}
       <div
-        className="rounded-lg border-2 border-dashed border-slate-300 bg-white px-6 py-12 text-center hover:border-slate-400 cursor-pointer transition-colors"
+        className="rounded-lg border-2 border-dashed border-border bg-card px-6 py-12 text-center hover:border-ring cursor-pointer transition-colors"
         onClick={() => inputRef.current?.click()}
       >
-        <Upload className="mx-auto h-8 w-8 text-slate-400" />
-        <p className="mt-2 text-sm font-medium text-slate-700">
+        <Upload className="mx-auto h-8 w-8 text-muted-foreground" />
+        <p className="mt-2 text-sm font-medium text-foreground">
           {file ? file.name : "Click to select an Excel file"}
         </p>
-        <p className="mt-1 text-xs text-slate-500">
+        <p className="mt-1 text-xs text-muted-foreground">
           .xlsx or .xls files accepted
         </p>
         <input
@@ -84,11 +84,11 @@ export function ExcelUploadForm() {
       </div>
 
       {/* Template download */}
-      <div className="flex items-center gap-2 text-sm text-slate-500">
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <FileSpreadsheet className="h-4 w-4" />
         <span>
           Need a template? Use columns:{" "}
-          <code className="text-xs bg-slate-100 px-1 py-0.5 rounded">
+          <code className="text-xs bg-muted px-1 py-0.5 rounded">
             Name, Phone, Email, City, State, Job Type, Service Type, Message
           </code>
         </span>

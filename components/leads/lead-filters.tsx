@@ -90,7 +90,7 @@ export function LeadFilters() {
           variant="ghost"
           size="sm"
           onClick={clearAll}
-          className="text-slate-500"
+          className="text-muted-foreground"
         >
           <X className="mr-1 h-3 w-3" />
           Clear

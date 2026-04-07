@@ -16,8 +16,10 @@ import { LeadStatusBadge } from "./lead-status-badge";
 import { LeadUrgencyBadge } from "./lead-urgency-badge";
 import { ActivityTimeline } from "@/components/activity/activity-timeline";
 import { ActivityEntryForm } from "@/components/activity/activity-entry-form";
-import { updateLeadFields } from "@/lib/actions/leads";
+import { updateLeadFields, deleteLead } from "@/lib/actions/leads";
 import { formatCurrency, formatDate, formatPhone } from "@/lib/utils/format";
+import { Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import type { Lead, Activity } from "@/lib/db/types";
 
 interface LeadDetailDrawerProps {
@@ -38,6 +40,8 @@ export function LeadDetailDrawer({
   const [notes, setNotes] = useState("");
   const [followUp, setFollowUp] = useState("");
   const [saving, setSaving] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (lead) {
@@ -78,7 +82,7 @@ export function LeadDetailDrawer({
         <div className="mt-6 space-y-6">
           {/* Status */}
           <div>
-            <Label className="text-xs text-slate-500">Status</Label>
+            <Label className="text-xs text-muted-foreground">Status</Label>
             <div className="mt-1">
               <LeadStatusBadge leadId={lead.id} status={lead.status} />
             </div>
@@ -86,7 +90,7 @@ export function LeadDetailDrawer({
 
           {/* Lead Info (read-only) */}
           <div className="space-y-2">
-            <h3 className="text-sm font-medium text-slate-900">Lead Info</h3>
+            <h3 className="text-sm font-medium text-foreground">Lead Info</h3>
             <InfoRow label="Phone" value={lead.phone ? formatPhone(lead.phone) : null} />
             <InfoRow label="Email" value={lead.email} />
             <InfoRow
@@ -104,7 +108,7 @@ export function LeadDetailDrawer({
 
           {/* Commercial (editable) */}
           <div className="space-y-3">
-            <h3 className="text-sm font-medium text-slate-900">Commercial</h3>
+            <h3 className="text-sm font-medium text-foreground">Commercial</h3>
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
@@ -167,9 +171,55 @@ export function LeadDetailDrawer({
 
           {/* Activity */}
           <div className="space-y-3">
-            <h3 className="text-sm font-medium text-slate-900">Activity</h3>
+            <h3 className="text-sm font-medium text-foreground">Activity</h3>
             <ActivityEntryForm leadId={lead.id} />
             <ActivityTimeline activities={activities} />
+          </div>
+
+          <Separator />
+
+          {/* Delete */}
+          <div className="space-y-2">
+            {!confirmDelete ? (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                onClick={() => setConfirmDelete(true)}
+              >
+                <Trash2 className="mr-1 h-3 w-3" />
+                Delete Lead
+              </Button>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  disabled={deleting}
+                  onClick={async () => {
+                    setDeleting(true);
+                    const result = await deleteLead(lead!.id);
+                    if (result.success) {
+                      toast.success("Lead deleted");
+                      onClose();
+                    } else {
+                      toast.error(result.error ?? "Failed to delete");
+                    }
+                    setDeleting(false);
+                    setConfirmDelete(false);
+                  }}
+                >
+                  {deleting ? "Deleting..." : "Confirm Delete"}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setConfirmDelete(false)}
+                >
+                  Cancel
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </SheetContent>
@@ -187,8 +237,8 @@ function InfoRow({
   if (!value) return null;
   return (
     <div className="flex justify-between text-sm">
-      <span className="text-slate-500">{label}</span>
-      <span className="text-slate-900">{value}</span>
+      <span className="text-muted-foreground">{label}</span>
+      <span className="text-foreground">{value}</span>
     </div>
   );
 }

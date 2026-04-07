@@ -25,7 +25,7 @@ export function AboutModal({ children }: AboutModalProps) {
           <DialogTitle>About This Project</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4 text-sm text-slate-600">
+        <div className="space-y-4 text-sm text-muted-foreground">
           <Section title="What It Is">
             LeadPulse is a lightweight lead intake and follow-up CRM built for a
             small epoxy flooring contractor. It captures leads from Facebook ads,
@@ -96,7 +96,7 @@ export function AboutModal({ children }: AboutModalProps) {
 
           <Separator />
 
-          <p className="text-xs text-slate-400 pt-2">
+          <p className="text-xs text-muted-foreground pt-2">
             Built by Tony Mikityuk as a portfolio artifact.
           </p>
         </div>
@@ -114,7 +114,7 @@ function Section({
 }) {
   return (
     <div>
-      <h3 className="text-sm font-medium text-slate-900 mb-1">{title}</h3>
+      <h3 className="text-sm font-medium text-foreground mb-1">{title}</h3>
       <div>{children}</div>
     </div>
   );
