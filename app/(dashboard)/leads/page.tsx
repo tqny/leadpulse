@@ -1,6 +1,11 @@
 import { Suspense } from "react";
-import { getLeads, type LeadFilters, type LeadSort } from "@/lib/supabase/queries/leads";
-import { getLeadStats } from "@/lib/supabase/queries/leads";
+import {
+  getLeads,
+  getLeadStats,
+  type LeadFilters,
+  type LeadSort,
+} from "@/lib/supabase/queries/leads";
+import type { Timeframe } from "@/lib/db/types";
 import { DashboardStrip } from "@/components/leads/dashboard-strip";
 import { LeadListClient } from "@/components/leads/lead-list-client";
 import { LeadIntakeForm } from "@/components/leads/lead-intake-form";
@@ -13,8 +18,10 @@ interface LeadsPageProps {
     status?: string;
     source?: string;
     followUp?: string;
+    timeframe?: string;
     sort?: string;
     dir?: string;
+    page?: string;
   }>;
 }
 
@@ -26,14 +33,17 @@ export default async function LeadsPage({ searchParams }: LeadsPageProps) {
   if (params.source) filters.source = params.source as LeadSource;
   if (params.followUp)
     filters.followUp = params.followUp as "overdue" | "today" | "this_week";
+  if (params.timeframe) filters.timeframe = params.timeframe as Timeframe;
 
   const sort: LeadSort = {
     column: (params.sort as LeadSort["column"]) ?? "created_at",
     direction: (params.dir as "asc" | "desc") ?? "desc",
   };
 
-  const [leads, stats] = await Promise.all([
-    getLeads(filters, sort),
+  const page = Math.max(1, parseInt(params.page ?? "1", 10) || 1);
+
+  const [result, stats] = await Promise.all([
+    getLeads(filters, sort, page),
     getLeadStats(),
   ]);
 
@@ -48,7 +58,13 @@ export default async function LeadsPage({ searchParams }: LeadsPageProps) {
       <DashboardStrip stats={stats} />
 
       <Suspense fallback={<Skeleton className="h-96 w-full" />}>
-        <LeadListClient leads={leads} />
+        <LeadListClient
+          leads={result.leads}
+          page={result.page}
+          totalPages={result.totalPages}
+          total={result.total}
+          pageSize={result.pageSize}
+        />
       </Suspense>
     </div>
   );

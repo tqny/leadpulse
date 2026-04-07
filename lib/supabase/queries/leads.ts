@@ -1,10 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
-import type { Lead, LeadStatus, LeadSource } from "@/lib/db/types";
+import type { Lead, LeadStatus, LeadSource, Timeframe } from "@/lib/db/types";
 
 export interface LeadFilters {
   status?: LeadStatus | LeadStatus[];
   source?: LeadSource;
   followUp?: "overdue" | "today" | "this_week" | null;
+  timeframe?: Timeframe;
 }
 
 export interface LeadSort {
@@ -12,13 +13,24 @@ export interface LeadSort {
   direction: "asc" | "desc";
 }
 
+export const PAGE_SIZE = 10;
+
+export interface PaginatedLeads {
+  leads: Lead[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
 export async function getLeads(
   filters?: LeadFilters,
-  sort?: LeadSort
-): Promise<Lead[]> {
+  sort?: LeadSort,
+  page: number = 1
+): Promise<PaginatedLeads> {
   const supabase = await createClient();
 
-  let query = supabase.from("leads").select("*");
+  let query = supabase.from("leads").select("*", { count: "exact" });
 
   if (filters?.status) {
     if (Array.isArray(filters.status)) {
@@ -30,6 +42,21 @@ export async function getLeads(
 
   if (filters?.source) {
     query = query.eq("source", filters.source);
+  }
+
+  // Timeframe filter (default: last_month)
+  const timeframe = filters?.timeframe ?? "last_month";
+  if (timeframe !== "all") {
+    const now = new Date();
+    let cutoff: Date;
+    if (timeframe === "last_week") {
+      cutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    } else if (timeframe === "last_month") {
+      cutoff = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    } else {
+      cutoff = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+    }
+    query = query.gte("created_at", cutoff.toISOString());
   }
 
   if (filters?.followUp) {
@@ -51,10 +78,23 @@ export async function getLeads(
   const sortDir = sort?.direction ?? "desc";
   query = query.order(sortCol, { ascending: sortDir === "asc" });
 
-  const { data, error } = await query;
+  // Pagination
+  const from = (page - 1) * PAGE_SIZE;
+  const to = from + PAGE_SIZE - 1;
+  query = query.range(from, to);
+
+  const { data, error, count } = await query;
 
   if (error) throw error;
-  return (data as Lead[]) ?? [];
+
+  const total = count ?? 0;
+  return {
+    leads: (data as Lead[]) ?? [],
+    total,
+    page,
+    pageSize: PAGE_SIZE,
+    totalPages: Math.ceil(total / PAGE_SIZE),
+  };
 }
 
 export async function getLeadById(id: string): Promise<Lead | null> {
@@ -114,8 +154,6 @@ export async function getLeadStats() {
   const all = leads ?? [];
   const statusCounts: Record<string, number> = {};
   let pipelineValue = 0;
-  let totalResponseTime = 0;
-  let contactedCount = 0;
 
   for (const lead of all) {
     statusCounts[lead.status] = (statusCounts[lead.status] || 0) + 1;
@@ -129,6 +167,6 @@ export async function getLeadStats() {
     total: all.length,
     statusCounts,
     pipelineValue,
-    avgResponseTime: contactedCount > 0 ? totalResponseTime / contactedCount : null,
+    avgResponseTime: null,
   };
 }
