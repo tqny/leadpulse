@@ -57,12 +57,15 @@ export function AboutModal({ children }: AboutModalProps) {
               <li>Facebook Lead Ads webhook ingestion</li>
               <li>Text notification paste-to-parse intake</li>
               <li>Excel bulk import with header matching</li>
+              <li>Manual lead entry</li>
               <li>Lead table with filters, sorting, urgency indicators</li>
-              <li>Lead detail drawer with editable fields</li>
-              <li>Activity log per lead</li>
-              <li>Dashboard summary strip</li>
-              <li>Real-time notifications on new leads</li>
-              <li>Demo mode for reviewers</li>
+              <li>Lead detail drawer with fully editable fields</li>
+              <li>Activity log per lead (calls, texts, proposals, notes)</li>
+              <li>Dashboard summary strip with pipeline value</li>
+              <li>Speed-to-lead urgency timer</li>
+              <li>Real-time toast notifications on new leads</li>
+              <li>Demo mode — simulate a lead for reviewers</li>
+              <li>Single-operator auth with row-level security</li>
             </ul>
           </Section>
 
@@ -77,9 +80,10 @@ export function AboutModal({ children }: AboutModalProps) {
           <Separator />
 
           <Section title="Tech Stack">
-            Next.js (App Router), TypeScript, Tailwind CSS, shadcn/ui, Supabase
-            (Postgres + Auth + Realtime), Vercel. No overbuilt backend — just
-            clean data flow from ingestion to UI.
+            Next.js 16 (App Router), TypeScript, Tailwind CSS 4, shadcn/ui,
+            Supabase (Postgres + Auth + Realtime), Zod validation, SheetJS for
+            Excel parsing, Vercel. No overbuilt backend — just clean data flow
+            from ingestion to UI.
           </Section>
 
           <Separator />

@@ -64,6 +64,14 @@ export const leadStatusSchema = z.object({
 
 // Lead fields update (partial)
 export const leadFieldsSchema = z.object({
+  name: z.string().min(1).optional(),
+  phone: z.string().nullable().optional(),
+  email: z.string().nullable().optional(),
+  city: z.string().nullable().optional(),
+  state: z.string().nullable().optional(),
+  job_type: z.string().nullable().optional(),
+  service_type: z.string().nullable().optional(),
+  message: z.string().nullable().optional(),
   estimated_sqft: z.number().nullable().optional(),
   quote_amount: z.number().nullable().optional(),
   notes: z.string().nullable().optional(),

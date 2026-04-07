@@ -451,51 +451,56 @@ export function LeadDetailDrawer({
           </div>
         </div>
 
-        {/* ── Lead Info Section ── */}
-        <div className="p-6 py-4 space-y-1.5 bg-elevated">
+        {/* ── Contact Details (Editable) ── */}
+        <div className="p-6 py-4 space-y-1 bg-elevated">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
             Contact Details
           </h3>
-          {phone && (
-            <InfoRow icon={Phone} label="Phone">
-              <a href={`tel:${rawPhone}`} className="text-sm text-foreground hover:text-primary transition-colors">
-                {phone}
-              </a>
-            </InfoRow>
-          )}
-          {lead.email && (
-            <InfoRow icon={Mail} label="Email">
-              <a href={`mailto:${lead.email}`} className="text-sm text-foreground hover:text-primary transition-colors truncate">
-                {lead.email}
-              </a>
-            </InfoRow>
-          )}
-          {location && (
-            <InfoRow icon={MapPin} label="Location">
-              <span className="text-sm text-foreground">{location}</span>
-            </InfoRow>
-          )}
-          {lead.job_type && (
-            <InfoRow icon={Briefcase} label="Job Type">
-              <span className="text-sm text-foreground">{lead.job_type}</span>
-            </InfoRow>
-          )}
-          {lead.service_type && (
-            <InfoRow icon={Wrench} label="Service">
-              <span className="text-sm text-foreground">{lead.service_type}</span>
-            </InfoRow>
-          )}
-          {lead.message && (
-            <div className="pt-1">
-              <div className="flex items-start gap-2">
-                <MessageCircle className="h-3.5 w-3.5 text-muted-foreground mt-0.5 shrink-0" />
-                <div>
-                  <span className="text-xs text-muted-foreground">Message</span>
-                  <p className="text-sm text-foreground mt-0.5">{lead.message}</p>
-                </div>
-              </div>
-            </div>
-          )}
+          <InlineEditField
+            label="Phone"
+            value={lead.phone ?? ""}
+            displayValue={phone ?? ""}
+            placeholder="Add phone number"
+            onSave={(v) => saveField("phone", v)}
+          />
+          <InlineEditField
+            label="Email"
+            value={lead.email ?? ""}
+            placeholder="Add email"
+            onSave={(v) => saveField("email", v)}
+          />
+          <InlineEditField
+            label="City"
+            value={lead.city ?? ""}
+            placeholder="Add city"
+            onSave={(v) => saveField("city", v)}
+          />
+          <InlineEditField
+            label="State"
+            value={lead.state ?? ""}
+            placeholder="Add state"
+            onSave={(v) => saveField("state", v)}
+          />
+          <InlineEditField
+            label="Job Type"
+            value={lead.job_type ?? ""}
+            placeholder="Add job type"
+            onSave={(v) => saveField("job_type", v)}
+          />
+          <InlineEditField
+            label="Service"
+            value={lead.service_type ?? ""}
+            placeholder="Add service type"
+            onSave={(v) => saveField("service_type", v)}
+          />
+          <div className="pt-1">
+            <InlineEditTextarea
+              label="Message"
+              value={lead.message ?? ""}
+              placeholder="Add message..."
+              onSave={(v) => saveField("message", v)}
+            />
+          </div>
           <div className="flex items-center gap-4 pt-1 text-xs text-muted-foreground">
             <span className="flex items-center gap-1">
               <Clock className="h-3 w-3" />

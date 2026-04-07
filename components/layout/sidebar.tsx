@@ -3,14 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Users, Upload, Info, ChevronLeft, ChevronRight } from "lucide-react";
+import { Users, Upload, ChevronLeft, ChevronRight, Hammer } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { AboutModal } from "@/components/about/about-modal";
 
 const navItems = [
-  { href: "/leads", label: "Leads", icon: Users },
-  { href: "/import", label: "Import", icon: Upload },
+  { href: "/leads", label: "Leads", icon: Users, color: "text-blue-500" },
+  { href: "/import", label: "Import", icon: Upload, color: "text-teal-500" },
 ];
 
 interface SidebarProps {
@@ -64,27 +63,26 @@ export function Sidebar({ mobile, onNavigate }: SidebarProps) {
               className={cn(
                 "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                 isActive
-                  ? "bg-muted text-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  ? `bg-muted text-foreground border-l-2 ${item.color.replace("text-", "border-")}`
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground hover:translate-x-1 transition-all duration-200"
               )}
             >
-              <item.icon className="h-4 w-4 shrink-0" />
+              <item.icon className={cn("h-4 w-4 shrink-0", item.color)} />
               {showLabels && <span>{item.label}</span>}
             </Link>
           );
         })}
       </nav>
 
-      <div className="border-t border-sidebar-border p-2">
-        <AboutModal>
-          <button
-            onClick={onNavigate}
-            className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
-          >
-            <Info className="h-4 w-4 shrink-0" />
-            {showLabels && <span>About This Project</span>}
-          </button>
-        </AboutModal>
+      <div className="border-t border-sidebar-border p-3">
+        <div className="flex items-center gap-2">
+          <Hammer className="h-4 w-4 shrink-0 text-amber-700" />
+          {showLabels && (
+            <span className="text-xs font-bold uppercase tracking-widest text-amber-700">
+              Epoxy Bros
+            </span>
+          )}
+        </div>
       </div>
     </aside>
   );

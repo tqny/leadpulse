@@ -149,7 +149,7 @@ export function LeadIntakeForm() {
       }}
     >
       <DialogTrigger>
-        <Button size="sm">
+        <Button size="sm" className="transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
           <Plus className="mr-1 h-4 w-4" />
           New Lead
         </Button>
