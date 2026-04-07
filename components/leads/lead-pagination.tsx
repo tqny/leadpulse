@@ -36,15 +36,14 @@ export function LeadPagination({
   const to = Math.min(page * pageSize, total);
 
   return (
-    <div className="flex items-center justify-between border-t border-border bg-card px-4 py-3 rounded-b-lg">
-      <p className="text-sm text-muted-foreground">
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-2 border-t border-border bg-card px-4 py-3 rounded-b-lg">
+      <p className="text-xs sm:text-sm text-muted-foreground">
         Showing{" "}
         <span className="font-medium text-foreground">{from}</span>
         {" - "}
         <span className="font-medium text-foreground">{to}</span>
         {" of "}
         <span className="font-medium text-foreground">{total}</span>
-        {" leads"}
       </p>
 
       <div className="flex items-center gap-1">
@@ -62,7 +61,7 @@ export function LeadPagination({
           p === "..." ? (
             <span
               key={`ellipsis-${i}`}
-              className="px-2 text-sm text-muted-foreground"
+              className="hidden sm:inline px-2 text-sm text-muted-foreground"
             >
               ...
             </span>
@@ -72,12 +71,16 @@ export function LeadPagination({
               variant={p === page ? "default" : "outline"}
               size="sm"
               onClick={() => goToPage(p as number)}
-              className="h-8 w-8 p-0 text-xs"
+              className="hidden sm:inline-flex h-8 w-8 p-0 text-xs"
             >
               {p}
             </Button>
           )
         )}
+
+        <span className="sm:hidden text-xs text-muted-foreground px-2">
+          {page} / {totalPages}
+        </span>
 
         <Button
           variant="outline"

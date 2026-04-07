@@ -10,6 +10,7 @@ import {
 import { LEAD_STATUSES, STATUS_LABELS, type LeadStatus } from "@/lib/db/types";
 import { updateLeadStatus } from "@/lib/actions/leads";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 const STATUS_COLORS: Record<LeadStatus, string> = {
   new: "bg-blue-100 text-blue-700 hover:bg-blue-200",
@@ -54,7 +55,10 @@ export function LeadStatusBadge({
             key={s}
             onClick={async () => {
               if (s !== status) {
-                await updateLeadStatus(leadId, s);
+                const result = await updateLeadStatus(leadId, s);
+                if (result.error) {
+                  toast.error(result.error);
+                }
               }
             }}
             className={cn(s === status && "font-medium")}

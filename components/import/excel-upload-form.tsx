@@ -141,7 +141,7 @@ export function ExcelUploadForm() {
   }
 
   return (
-    <div className="max-w-lg space-y-6">
+    <div className="w-full max-w-lg space-y-6">
       {/* Drop zone */}
       <div
         className={cn(

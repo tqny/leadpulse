@@ -23,6 +23,7 @@ import { ActivityTimeline } from "@/components/activity/activity-timeline";
 import { ActivityEntryForm } from "@/components/activity/activity-entry-form";
 import { updateLeadFields, deleteLead } from "@/lib/actions/leads";
 import { formatCurrency, formatDate, formatPhone } from "@/lib/utils/format";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Phone,
   MessageSquare,
@@ -38,6 +39,8 @@ import {
   Pencil,
   Check,
   X,
+  AlertCircle,
+  RefreshCw,
 } from "lucide-react";
 import { toast } from "sonner";
 import type { Lead, Activity } from "@/lib/db/types";
@@ -45,6 +48,9 @@ import type { Lead, Activity } from "@/lib/db/types";
 interface LeadDetailDrawerProps {
   lead: Lead | null;
   activities: Activity[];
+  activitiesLoading?: boolean;
+  activitiesError?: boolean;
+  onRetryActivities?: () => void;
   open: boolean;
   onClose: () => void;
 }
@@ -320,6 +326,9 @@ function ContactAction({
 export function LeadDetailDrawer({
   lead,
   activities,
+  activitiesLoading,
+  activitiesError,
+  onRetryActivities,
   open,
   onClose,
 }: LeadDetailDrawerProps) {
@@ -541,7 +550,37 @@ export function LeadDetailDrawer({
             Activity
           </h3>
           <ActivityEntryForm leadId={lead.id} />
-          <ActivityTimeline activities={activities} />
+          {activitiesLoading ? (
+            <div className="space-y-3">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="flex gap-3">
+                  <Skeleton className="h-7 w-7 shrink-0" />
+                  <div className="flex-1 space-y-1.5">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-3 w-40" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : activitiesError ? (
+            <div className="flex flex-col items-center py-6 text-muted-foreground gap-2">
+              <AlertCircle className="h-8 w-8 opacity-40" />
+              <p className="text-sm">Failed to load activities</p>
+              {onRetryActivities && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={onRetryActivities}
+                  className="h-7 text-xs"
+                >
+                  <RefreshCw className="mr-1 h-3 w-3" />
+                  Retry
+                </Button>
+              )}
+            </div>
+          ) : (
+            <ActivityTimeline activities={activities} />
+          )}
         </div>
       </SheetContent>
     </Sheet>

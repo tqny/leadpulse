@@ -1,5 +1,6 @@
 import { STATUS_LABELS, type LeadStatus } from "@/lib/db/types";
 import { formatCurrency } from "@/lib/utils/format";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface DashboardStripProps {
   stats: {
@@ -36,6 +37,19 @@ function Card({ label, value }: { label: string; value: string }) {
     <div className="border border-border bg-elevated px-4 py-3 shadow-sm">
       <p className="text-xs font-medium text-muted-foreground">{label}</p>
       <p className="mt-1 text-2xl font-semibold text-foreground">{value}</p>
+    </div>
+  );
+}
+
+export function DashboardStripSkeleton() {
+  return (
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div key={i} className="border border-border bg-elevated px-4 py-3 shadow-sm">
+          <Skeleton className="h-3 w-16 mb-2" />
+          <Skeleton className="h-7 w-12" />
+        </div>
+      ))}
     </div>
   );
 }
