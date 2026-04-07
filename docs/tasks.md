@@ -1,6 +1,6 @@
 # LeadPulse — Tasks
 
-## Current Phase: BUILD (Phases 1-6 nearly complete, 6.7 remaining)
+## Current Phase: POLISH (All phases complete, deployed to Vercel)
 
 ---
 
@@ -263,11 +263,10 @@
   - Color contrast passes WCAG AA (foreground on card: ~9.3:1, muted on card: ~5.4:1)
 - [x] **6.6** README final pass
   - Updated feature list, env vars section, accurate instructions
-- [ ] **6.7** GitHub repo setup
-  - Create remote repo
-  - Push all code
-  - Set up Vercel deployment
-  - **Done when:** App is live on Vercel, repo is public on GitHub
+- [x] **6.7** GitHub repo setup + Vercel deploy
+  - Repo public at github.com/tqny/leadpulse
+  - Env vars configured via Vercel CLI
+  - Production deploy at leadpulse-one.vercel.app
 
 ---
 
@@ -278,7 +277,8 @@
 - [x] Phase 3: Lead Management UI (3.1-3.8) — dashboard strip, lead table, status/urgency badges, filters, sorting, empty states
 - [x] Phase 4: Lead Detail + Activity (4.1-4.7) — detail drawer, editable fields, activity timeline/form, text paste, manual entry, Excel import page
 - [x] Phase 5: Real-Time + Delight (5.1-5.4) — Supabase realtime subscription, toast notifications, demo simulate button
-- [x] Phase 6 (6.1-6.6): About modal, responsive layout, loading/error states, polish, README
+- [x] Phase 6 (6.1-6.7): About modal, responsive layout, loading/error states, polish, README, Vercel deploy
+- [x] Post-phase polish: hover animations, status-colored KPI cards, editable contact fields, filter UX, Epoxy Bros branding
 
 ---
 
