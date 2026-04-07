@@ -12,9 +12,10 @@ import {
 import { LeadStatusBadge } from "./lead-status-badge";
 import { LeadUrgencyBadge } from "./lead-urgency-badge";
 import type { Lead } from "@/lib/db/types";
-import { formatRelativeTime, formatPhone } from "@/lib/utils/format";
-import { ArrowUpDown, User } from "lucide-react";
+import { formatDate, formatRelativeTime, formatPhone } from "@/lib/utils/format";
+import { ArrowUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface LeadTableProps {
   leads: Lead[];
@@ -23,47 +24,11 @@ interface LeadTableProps {
 }
 
 const SORTABLE_COLUMNS = [
-  { key: "name", label: "Lead Name", width: "w-[240px]" },
-  { key: "status", label: "Status", width: "w-[120px]" },
-  { key: "created_at", label: "Last Interaction", width: "w-[160px]" },
-  { key: "follow_up_date", label: "Follow-up", width: "w-[120px]" },
+  { key: "name", label: "Lead Name", minWidth: "min-w-[180px]" },
+  { key: "status", label: "Status", minWidth: "min-w-[110px]" },
+  { key: "created_at", label: "Created", minWidth: "min-w-[110px]" },
+  { key: "follow_up_date", label: "Follow-up", minWidth: "min-w-[110px]" },
 ] as const;
-
-// Generate a consistent color from a string
-function getAvatarColor(name: string): string {
-  const colors = [
-    "bg-red-500",
-    "bg-orange-500",
-    "bg-amber-500",
-    "bg-yellow-500",
-    "bg-lime-500",
-    "bg-green-500",
-    "bg-emerald-500",
-    "bg-teal-500",
-    "bg-cyan-500",
-    "bg-sky-500",
-    "bg-blue-500",
-    "bg-indigo-500",
-    "bg-violet-500",
-    "bg-purple-500",
-    "bg-fuchsia-500",
-    "bg-pink-500",
-  ];
-  let hash = 0;
-  for (let i = 0; i < name.length; i++) {
-    hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  return colors[Math.abs(hash) % colors.length];
-}
-
-function getInitials(name: string): string {
-  return name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
-}
 
 const SOURCE_LABELS: Record<string, string> = {
   facebook_webhook: "Facebook",
@@ -94,10 +59,10 @@ export function LeadTable({ leads, onSelectLead, startIndex = 0 }: LeadTableProp
   }
 
   return (
-    <div className="rounded-lg border border-border bg-card overflow-hidden">
-      <Table>
+    <div className="rounded-lg border border-border bg-card overflow-x-auto">
+      <Table className="min-w-[900px]">
         <TableHeader>
-          <TableRow className="bg-muted/50 hover:bg-muted/50">
+          <TableRow className="bg-muted hover:bg-muted">
             <TableHead className="w-[48px] text-center text-xs font-semibold text-muted-foreground">
               #
             </TableHead>
@@ -106,7 +71,7 @@ export function LeadTable({ leads, onSelectLead, startIndex = 0 }: LeadTableProp
                 key={col.key}
                 className={cn(
                   "cursor-pointer select-none text-xs font-semibold uppercase tracking-wider text-muted-foreground",
-                  col.width
+                  col.minWidth
                 )}
                 onClick={() => toggleSort(col.key)}
               >
@@ -114,7 +79,7 @@ export function LeadTable({ leads, onSelectLead, startIndex = 0 }: LeadTableProp
                   {col.label}
                   <ArrowUpDown
                     className={cn(
-                      "h-3 w-3",
+                      "h-3 w-3 shrink-0",
                       currentSort === col.key
                         ? "text-foreground"
                         : "text-muted-foreground/50"
@@ -123,13 +88,13 @@ export function LeadTable({ leads, onSelectLead, startIndex = 0 }: LeadTableProp
                 </span>
               </TableHead>
             ))}
-            <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground w-[120px]">
+            <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground min-w-[130px]">
               Location
             </TableHead>
-            <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground w-[100px]">
+            <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground min-w-[90px]">
               Source
             </TableHead>
-            <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground w-[80px]">
+            <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground min-w-[80px]">
               Urgency
             </TableHead>
           </TableRow>
@@ -138,7 +103,7 @@ export function LeadTable({ leads, onSelectLead, startIndex = 0 }: LeadTableProp
           {leads.map((lead, index) => (
             <TableRow
               key={lead.id}
-              className="cursor-pointer hover:bg-muted/40 transition-colors"
+              className="cursor-pointer hover:bg-elevated transition-colors"
               onClick={() => onSelectLead(lead.id)}
             >
               {/* Row number */}
@@ -146,31 +111,21 @@ export function LeadTable({ leads, onSelectLead, startIndex = 0 }: LeadTableProp
                 {startIndex + index + 1}
               </TableCell>
 
-              {/* Name with avatar */}
+              {/* Name + phone (no avatar) */}
               <TableCell>
-                <div className="flex items-center gap-3">
-                  <div
-                    className={cn(
-                      "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white",
-                      getAvatarColor(lead.name)
-                    )}
-                  >
-                    {getInitials(lead.name)}
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium text-foreground truncate">
-                      {lead.name}
-                    </p>
-                    {lead.phone && (
-                      <a
-                        href={`tel:${lead.phone}`}
-                        className="text-xs text-muted-foreground hover:text-primary truncate block"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        {formatPhone(lead.phone)}
-                      </a>
-                    )}
-                  </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-foreground truncate max-w-[200px]">
+                    {lead.name}
+                  </p>
+                  {lead.phone && (
+                    <a
+                      href={`tel:${lead.phone}`}
+                      className="text-xs text-muted-foreground hover:text-primary truncate block max-w-[200px]"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {formatPhone(lead.phone)}
+                    </a>
+                  )}
                 </div>
               </TableCell>
 
@@ -179,26 +134,28 @@ export function LeadTable({ leads, onSelectLead, startIndex = 0 }: LeadTableProp
                 <LeadStatusBadge leadId={lead.id} status={lead.status} />
               </TableCell>
 
-              {/* Last interaction (relative time) */}
-              <TableCell className="text-sm text-muted-foreground">
-                {formatRelativeTime(lead.created_at)}
+              {/* Created date */}
+              <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
+                {formatDate(lead.created_at)}
               </TableCell>
 
               {/* Follow-up */}
-              <TableCell className="text-sm text-muted-foreground">
+              <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
                 {lead.follow_up_date
-                  ? formatRelativeTime(lead.follow_up_date + "T00:00:00")
+                  ? formatDate(lead.follow_up_date)
                   : "—"}
               </TableCell>
 
               {/* Location */}
               <TableCell className="text-sm text-muted-foreground">
-                {[lead.city, lead.state].filter(Boolean).join(", ") || "—"}
+                <span className="truncate block max-w-[140px]">
+                  {[lead.city, lead.state].filter(Boolean).join(", ") || "—"}
+                </span>
               </TableCell>
 
               {/* Source */}
               <TableCell>
-                <span className="inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
+                <span className="inline-flex items-center rounded-full border border-border bg-muted px-2 py-0.5 text-xs font-medium text-foreground whitespace-nowrap">
                   {SOURCE_LABELS[lead.source] ?? lead.source}
                 </span>
               </TableCell>
@@ -214,6 +171,40 @@ export function LeadTable({ leads, onSelectLead, startIndex = 0 }: LeadTableProp
           ))}
         </TableBody>
       </Table>
+    </div>
+  );
+}
+
+export function LeadTableSkeleton() {
+  return (
+    <div className="rounded-lg border border-border bg-card overflow-hidden">
+      <div className="bg-muted px-4 py-3">
+        <div className="flex gap-6">
+          <Skeleton className="h-4 w-8" />
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-4 w-16" />
+          <Skeleton className="h-4 w-20" />
+          <Skeleton className="h-4 w-20" />
+          <Skeleton className="h-4 w-20" />
+          <Skeleton className="h-4 w-16" />
+          <Skeleton className="h-4 w-16" />
+        </div>
+      </div>
+      {Array.from({ length: 5 }).map((_, i) => (
+        <div key={i} className="flex items-center gap-6 border-t border-border px-4 py-3">
+          <Skeleton className="h-4 w-6" />
+          <div className="space-y-1.5">
+            <Skeleton className="h-4 w-28" />
+            <Skeleton className="h-3 w-20" />
+          </div>
+          <Skeleton className="h-5 w-16 rounded-full" />
+          <Skeleton className="h-4 w-20" />
+          <Skeleton className="h-4 w-16" />
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-5 w-14 rounded-full" />
+          <Skeleton className="h-5 w-14 rounded-full" />
+        </div>
+      ))}
     </div>
   );
 }

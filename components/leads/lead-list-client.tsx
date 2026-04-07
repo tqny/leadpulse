@@ -7,6 +7,7 @@ import { LeadPagination } from "./lead-pagination";
 import { LeadDetailDrawer } from "./lead-detail-drawer";
 import { createClient } from "@/lib/supabase/client";
 import type { Lead, Activity } from "@/lib/db/types";
+import { Inbox } from "lucide-react";
 
 interface LeadListClientProps {
   leads: Lead[];
@@ -82,11 +83,12 @@ export function LeadListClient({
 
 function EmptyState() {
   return (
-    <div className="rounded-lg border border-dashed border-border bg-card px-6 py-12 text-center">
-      <p className="text-sm font-medium text-foreground">No leads yet</p>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Leads will appear here when they arrive via Facebook, text paste, or
-        Excel import.
+    <div className="rounded-lg border border-dashed border-border bg-card px-6 py-16 text-center">
+      <Inbox className="mx-auto h-10 w-10 text-muted-foreground/50" />
+      <p className="mt-4 text-sm font-medium text-foreground">No leads yet</p>
+      <p className="mt-1 text-sm text-muted-foreground max-w-xs mx-auto">
+        Leads will appear here when they arrive via Facebook, text paste, Excel
+        import, or manual entry.
       </p>
     </div>
   );

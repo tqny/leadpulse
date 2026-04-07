@@ -60,7 +60,7 @@ export function LeadFilters() {
   );
 
   return (
-    <div className="flex flex-wrap items-center gap-3">
+    <div className="flex flex-wrap items-center gap-3 bg-card border border-border p-3">
       <Select
         value={currentTimeframe}
         onValueChange={(v) => setParam("timeframe", v ?? "")}

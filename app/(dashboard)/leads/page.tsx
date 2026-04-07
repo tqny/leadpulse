@@ -10,7 +10,7 @@ import { DashboardStrip } from "@/components/leads/dashboard-strip";
 import { LeadListClient } from "@/components/leads/lead-list-client";
 import { LeadIntakeForm } from "@/components/leads/lead-intake-form";
 import { RealtimeLeads } from "@/components/leads/realtime-leads";
-import { Skeleton } from "@/components/ui/skeleton";
+import { LeadTableSkeleton } from "@/components/leads/lead-table";
 import type { LeadStatus, LeadSource } from "@/lib/db/types";
 
 interface LeadsPageProps {
@@ -57,7 +57,7 @@ export default async function LeadsPage({ searchParams }: LeadsPageProps) {
       <RealtimeLeads />
       <DashboardStrip stats={stats} />
 
-      <Suspense fallback={<Skeleton className="h-96 w-full" />}>
+      <Suspense fallback={<LeadTableSkeleton />}>
         <LeadListClient
           leads={result.leads}
           page={result.page}

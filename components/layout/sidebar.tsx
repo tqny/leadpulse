@@ -20,11 +20,11 @@ export function Sidebar() {
   return (
     <aside
       className={cn(
-        "flex flex-col border-r border-border bg-card transition-all duration-200",
+        "flex flex-col border-r border-sidebar-border bg-sidebar transition-all duration-200",
         collapsed ? "w-16" : "w-60"
       )}
     >
-      <div className="flex h-14 items-center justify-between border-b border-border px-3">
+      <div className="flex h-14 items-center justify-between border-b border-sidebar-border px-3">
         {!collapsed && (
           <span className="text-lg font-semibold text-foreground">
             LeadPulse
@@ -65,7 +65,7 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="border-t border-border p-2">
+      <div className="border-t border-sidebar-border p-2">
         <AboutModal>
           <button className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground">
             <Info className="h-4 w-4 shrink-0" />

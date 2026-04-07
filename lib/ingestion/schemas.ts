@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { LEAD_STATUSES, LEAD_SOURCES, ACTIVITY_TYPES } from "@/lib/db/types";
+import { LEAD_STATUSES, ACTIVITY_TYPES } from "@/lib/db/types";
 
 // Schema for parsed lead data (shared by all intake paths)
 export const parsedLeadSchema = z.object({

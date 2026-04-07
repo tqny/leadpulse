@@ -17,7 +17,7 @@ const STATUS_COLORS: Record<LeadStatus, string> = {
   no_response: "bg-amber-100 text-amber-700 hover:bg-amber-200",
   proposal: "bg-purple-100 text-purple-700 hover:bg-purple-200",
   won: "bg-green-100 text-green-700 hover:bg-green-200",
-  lost: "bg-slate-100 text-slate-500 hover:bg-slate-200",
+  lost: "bg-muted text-muted-foreground hover:bg-muted/80",
 };
 
 interface LeadStatusBadgeProps {

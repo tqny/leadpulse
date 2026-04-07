@@ -33,7 +33,7 @@ export function DashboardStrip({ stats }: DashboardStripProps) {
 
 function Card({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-border bg-card px-4 py-3">
+    <div className="border border-border bg-elevated px-4 py-3 shadow-sm">
       <p className="text-xs font-medium text-muted-foreground">{label}</p>
       <p className="mt-1 text-2xl font-semibold text-foreground">{value}</p>
     </div>
