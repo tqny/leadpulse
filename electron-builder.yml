@@ -14,13 +14,8 @@ files:
   - package.json
   - "!node_modules"
 extraResources:
-  - from: .next/standalone
-    to: .next/standalone
-  - from: .next/static
-    to: .next/standalone/.next/static
-  - from: public
-    to: .next/standalone/public
   - from: electron/splash.html
     to: electron/splash.html
 npmRebuild: false
 asar: true
+afterPack: electron/after-pack.js
