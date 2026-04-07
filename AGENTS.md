@@ -7,7 +7,7 @@ Part of the portfolio at https://tqny.github.io/Tony-s-Site/
 
 ## Current Phase
 
-**BUILD**
+**POLISH**
 
 Phases progress as: BRIEF → PLAN → BUILD → POLISH
 
@@ -17,10 +17,10 @@ Update this field as the project advances.
 
 ## What To Do Right Now
 
-Architecture is locked. Working from `docs/tasks.md`, Phase 1 (Foundation) first.
+All phases complete. App is deployed at leadpulse-one.vercel.app. Repo is public at github.com/tqny/leadpulse.
 
-- Work one scoped task at a time
-- Verify each task before moving on
+- Visual polish and UX refinements
+- Bug fixes as discovered
 - **Run `/review`** before creating PRs
 - **Run `/browse`** for visual QA
 - **Run `/ship`** when a feature branch is ready

@@ -2,6 +2,8 @@
 
 A lightweight lead intake and follow-up CRM for a small epoxy flooring contractor, built around real inbound lead workflows from Facebook ads.
 
+**Live:** [leadpulse-one.vercel.app](https://leadpulse-one.vercel.app)
+
 ## What It Is
 
 LeadPulse is a focused operational tool that helps a solo contractor capture, triage, and track leads from Facebook Lead Ads. Leads arrive automatically via webhook, get parsed into structured records, and flow into a fast table-based interface for status tracking, outreach logging, and follow-up management.
