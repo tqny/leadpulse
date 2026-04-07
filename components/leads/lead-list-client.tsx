@@ -3,15 +3,26 @@
 import { useState, useEffect } from "react";
 import { LeadTable } from "./lead-table";
 import { LeadFilters } from "./lead-filters";
+import { LeadPagination } from "./lead-pagination";
 import { LeadDetailDrawer } from "./lead-detail-drawer";
 import { createClient } from "@/lib/supabase/client";
 import type { Lead, Activity } from "@/lib/db/types";
 
 interface LeadListClientProps {
   leads: Lead[];
+  page: number;
+  totalPages: number;
+  total: number;
+  pageSize: number;
 }
 
-export function LeadListClient({ leads }: LeadListClientProps) {
+export function LeadListClient({
+  leads,
+  page,
+  totalPages,
+  total,
+  pageSize,
+}: LeadListClientProps) {
   const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [activities, setActivities] = useState<Activity[]>([]);
@@ -26,7 +37,6 @@ export function LeadListClient({ leads }: LeadListClientProps) {
     const lead = leads.find((l) => l.id === selectedLeadId) ?? null;
     setSelectedLead(lead);
 
-    // Fetch activities for the selected lead
     async function fetchActivities() {
       const supabase = createClient();
       const { data } = await supabase
@@ -43,7 +53,20 @@ export function LeadListClient({ leads }: LeadListClientProps) {
   return (
     <div className="space-y-4">
       <LeadFilters />
-      <LeadTable leads={leads} onSelectLead={setSelectedLeadId} />
+
+      <div>
+        <LeadTable
+          leads={leads}
+          onSelectLead={setSelectedLeadId}
+          startIndex={(page - 1) * pageSize}
+        />
+        <LeadPagination
+          page={page}
+          totalPages={totalPages}
+          total={total}
+          pageSize={pageSize}
+        />
+      </div>
 
       {leads.length === 0 && <EmptyState />}
 

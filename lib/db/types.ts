@@ -47,6 +47,16 @@ export const ACTIVITY_TYPE_LABELS: Record<ActivityType, string> = {
   note: "Note added",
 };
 
+export const TIMEFRAMES = ["last_week", "last_month", "last_3_months", "all"] as const;
+export type Timeframe = (typeof TIMEFRAMES)[number];
+
+export const TIMEFRAME_LABELS: Record<Timeframe, string> = {
+  last_week: "Last Week",
+  last_month: "Last Month",
+  last_3_months: "Last 3 Months",
+  all: "All Time",
+};
+
 export interface Lead {
   id: string;
   user_id: string;

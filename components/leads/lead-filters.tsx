@@ -9,8 +9,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { LEAD_STATUSES, LEAD_SOURCES, STATUS_LABELS } from "@/lib/db/types";
-import { X } from "lucide-react";
+import {
+  LEAD_STATUSES,
+  LEAD_SOURCES,
+  STATUS_LABELS,
+  TIMEFRAMES,
+  TIMEFRAME_LABELS,
+  type Timeframe,
+} from "@/lib/db/types";
+import { X, Calendar } from "lucide-react";
 
 const SOURCE_LABELS: Record<string, string> = {
   facebook_webhook: "Facebook",
@@ -26,6 +33,8 @@ export function LeadFilters() {
   const currentStatus = searchParams.get("status") ?? undefined;
   const currentSource = searchParams.get("source") ?? undefined;
   const currentFollowUp = searchParams.get("followUp") ?? undefined;
+  const currentTimeframe =
+    (searchParams.get("timeframe") as Timeframe) ?? "last_month";
 
   function setParam(key: string, value: string) {
     const params = new URLSearchParams(searchParams.toString());
@@ -34,6 +43,8 @@ export function LeadFilters() {
     } else {
       params.delete(key);
     }
+    // Reset to page 1 when filters change
+    params.delete("page");
     router.push(`/leads?${params.toString()}`);
   }
 
@@ -41,11 +52,36 @@ export function LeadFilters() {
     router.push("/leads");
   }
 
-  const hasFilters = !!(currentStatus || currentSource || currentFollowUp);
+  const hasFilters = !!(
+    currentStatus ||
+    currentSource ||
+    currentFollowUp ||
+    (currentTimeframe && currentTimeframe !== "last_month")
+  );
 
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <Select value={currentStatus} onValueChange={(v) => setParam("status", v ?? "")}>
+      <Select
+        value={currentTimeframe}
+        onValueChange={(v) => setParam("timeframe", v ?? "")}
+      >
+        <SelectTrigger className="w-[160px]">
+          <Calendar className="mr-1 h-3 w-3 text-muted-foreground" />
+          <SelectValue placeholder="Last Month" />
+        </SelectTrigger>
+        <SelectContent>
+          {TIMEFRAMES.map((t) => (
+            <SelectItem key={t} value={t}>
+              {TIMEFRAME_LABELS[t]}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      <Select
+        value={currentStatus}
+        onValueChange={(v) => setParam("status", v ?? "")}
+      >
         <SelectTrigger className="w-[160px]">
           <SelectValue placeholder="All statuses" />
         </SelectTrigger>
@@ -58,7 +94,10 @@ export function LeadFilters() {
         </SelectContent>
       </Select>
 
-      <Select value={currentSource} onValueChange={(v) => setParam("source", v ?? "")}>
+      <Select
+        value={currentSource}
+        onValueChange={(v) => setParam("source", v ?? "")}
+      >
         <SelectTrigger className="w-[160px]">
           <SelectValue placeholder="All sources" />
         </SelectTrigger>
