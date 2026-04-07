@@ -19,6 +19,8 @@ Update this field as the project advances.
 
 All phases complete. App is deployed at leadpulse-one.vercel.app. Repo is public at github.com/tqny/leadpulse.
 
+Desktop app (Electron) added — runs the same Next.js app locally with native macOS features (notifications, dock badge, window state, auto-launch).
+
 - Visual polish and UX refinements
 - Bug fixes as discovered
 - **Run `/review`** before creating PRs
@@ -74,7 +76,7 @@ When context gets heavy (30+ substantial exchanges), recommend a fresh thread. T
 - **Fallback intake:** Copy-paste text notification parser
 - **Target user:** Solo founder / owner-operator acting as salesperson
 - **Status flow:** New → Contacted → No Response → Proposal → Won / Lost
-- **Stack:** Next.js, TypeScript, Tailwind, shadcn/ui, Supabase, Vercel
+- **Stack:** Next.js, TypeScript, Tailwind, shadcn/ui, Supabase, Vercel, Electron (desktop)
 - **Design:** Light mode, professional/utilitarian, moderately dense ops tool
 - **Auth:** Single operator, Supabase Auth, email/password
 

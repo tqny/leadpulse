@@ -1,12 +1,18 @@
 {
   "name": "leadpulse",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
+  "description": "Lightweight lead intake and follow-up CRM for epoxy flooring contractors",
+  "author": "Tony Mikityuk",
+  "main": "electron/dist/main.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "electron:dev": "node electron/build.mjs && concurrently \"next dev\" \"sleep 3 && env -u ELECTRON_RUN_AS_NODE electron .\"",
+    "electron:build": "next build && node electron/build.mjs && env -u ELECTRON_RUN_AS_NODE electron-builder",
+    "electron:start": "env -u ELECTRON_RUN_AS_NODE electron ."
   },
   "dependencies": {
     "@base-ui/react": "^1.3.0",
@@ -15,6 +21,8 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "electron-store": "^8.2.0",
+    "get-port-please": "^3.2.0",
     "lucide-react": "^1.7.0",
     "next": "16.2.2",
     "next-themes": "^0.4.6",
@@ -33,9 +41,13 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "concurrently": "^9.2.1",
+    "electron": "^41.1.1",
+    "electron-builder": "^26.8.1",
     "eslint": "^9",
     "eslint-config-next": "16.2.2",
     "tailwindcss": "^4",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }

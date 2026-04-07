@@ -279,6 +279,7 @@
 - [x] Phase 5: Real-Time + Delight (5.1-5.4) — Supabase realtime subscription, toast notifications, demo simulate button
 - [x] Phase 6 (6.1-6.7): About modal, responsive layout, loading/error states, polish, README, Vercel deploy
 - [x] Post-phase polish: hover animations, status-colored KPI cards, editable contact fields, filter UX, Epoxy Bros branding
+- [x] Desktop app (Electron): standalone Next.js server in Electron shell, native macOS titlebar, window state persistence, system notifications, dock badge, auto-launch, splash screen, app menu, esbuild bundling (271MB .app)
 
 ---
 

@@ -15,8 +15,9 @@
 /.next/
 /out/
 
-# production
-/build
+# production (allow build/icon.* for electron app icons)
+/build/*
+!/build/icon.*
 
 # misc
 .DS_Store
@@ -38,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# electron
+/dist/
+/release/
+electron/dist/
