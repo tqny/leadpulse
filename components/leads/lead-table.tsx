@@ -16,6 +16,7 @@ import { formatDate, formatRelativeTime, formatPhone } from "@/lib/utils/format"
 import { ArrowUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import { usePhoneProvider, callHref } from "@/lib/hooks/use-phone-provider";
 
 interface LeadTableProps {
   leads: Lead[];
@@ -40,6 +41,7 @@ const SOURCE_LABELS: Record<string, string> = {
 export function LeadTable({ leads, onSelectLead, startIndex = 0 }: LeadTableProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [phoneProvider] = usePhoneProvider();
   const currentSort = searchParams.get("sort") ?? "created_at";
   const currentDir = searchParams.get("dir") ?? "desc";
 
@@ -120,13 +122,22 @@ export function LeadTable({ leads, onSelectLead, startIndex = 0 }: LeadTableProp
                     {lead.name}
                   </p>
                   {lead.phone && (
-                    <a
-                      href={`tel:${lead.phone}`}
-                      className="text-xs text-muted-foreground hover:text-primary truncate block max-w-[200px]"
-                      onClick={(e) => e.stopPropagation()}
+                    <button
+                      type="button"
+                      className="text-xs text-muted-foreground hover:text-primary truncate block max-w-[200px] text-left"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const href = callHref(lead.phone!.replace(/\D/g, ""), phoneProvider);
+                        if (/^(tel:|sms:|mailto:)/.test(href)) {
+                          window.location.href = href;
+                        } else {
+                          const w = window.open(href, "_blank");
+                          if (w) setTimeout(() => w.close(), 500);
+                        }
+                      }}
                     >
                       {formatPhone(lead.phone)}
-                    </a>
+                    </button>
                   )}
                 </div>
               </TableCell>

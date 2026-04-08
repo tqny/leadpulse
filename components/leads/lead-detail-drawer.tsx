@@ -44,6 +44,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import type { Lead, Activity } from "@/lib/db/types";
+import { usePhoneProvider, callHref, smsHref } from "@/lib/hooks/use-phone-provider";
 
 interface LeadDetailDrawerProps {
   lead: Lead | null;
@@ -305,9 +306,34 @@ function ContactAction({
     );
   }
 
+  const isStandardProtocol = /^(tel:|sms:|mailto:)/.test(href);
+
+  if (isStandardProtocol) {
+    return (
+      <a
+        href={href}
+        className="flex flex-col items-center gap-1 group"
+        aria-label={label}
+      >
+        <div className="h-9 w-9 flex items-center justify-center border border-border bg-elevated hover:bg-accent hover:text-accent-foreground transition-colors">
+          <Icon className="h-4 w-4" />
+        </div>
+        <span className="text-[10px] text-muted-foreground group-hover:text-foreground transition-colors">
+          {label}
+        </span>
+      </a>
+    );
+  }
+
+  // Custom protocols (rcmobile://) — open without navigating away from LeadPulse
   return (
-    <a
-      href={href}
+    <button
+      type="button"
+      onClick={() => {
+        const w = window.open(href, "_blank");
+        // If the OS handled the deep link the blank tab is useless — close it
+        if (w) setTimeout(() => w.close(), 500);
+      }}
       className="flex flex-col items-center gap-1 group"
       aria-label={label}
     >
@@ -317,7 +343,7 @@ function ContactAction({
       <span className="text-[10px] text-muted-foreground group-hover:text-foreground transition-colors">
         {label}
       </span>
-    </a>
+    </button>
   );
 }
 
@@ -332,6 +358,7 @@ export function LeadDetailDrawer({
   open,
   onClose,
 }: LeadDetailDrawerProps) {
+  const [phoneProvider] = usePhoneProvider();
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -431,13 +458,13 @@ export function LeadDetailDrawer({
           {/* ── Contact Actions Bar ── */}
           <div className="flex items-center gap-4 mt-4">
             <ContactAction
-              href={`tel:${rawPhone}`}
+              href={callHref(rawPhone, phoneProvider)}
               icon={Phone}
               label="Call"
               disabled={!lead.phone}
             />
             <ContactAction
-              href={`sms:${rawPhone}`}
+              href={smsHref(rawPhone, phoneProvider)}
               icon={MessageSquare}
               label="Text"
               disabled={!lead.phone}

@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Users, Upload, ChevronLeft, ChevronRight, Hammer } from "lucide-react";
+import { Users, Upload, Settings, ChevronLeft, ChevronRight, Hammer } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
   { href: "/leads", label: "Leads", icon: Users, color: "text-blue-500" },
   { href: "/import", label: "Import", icon: Upload, color: "text-teal-500" },
+  { href: "/settings", label: "Settings", icon: Settings, color: "text-gray-500" },
 ];
 
 interface SidebarProps {
