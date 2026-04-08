@@ -47,9 +47,6 @@ export default function LoginPage() {
             <h1 className="text-2xl font-bold text-foreground tracking-tight">
               LeadPulse
             </h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Lead intake &amp; follow-up CRM for epoxy flooring pros
-            </p>
           </div>
         </div>
 
@@ -92,9 +89,6 @@ export default function LoginPage() {
           </form>
         </div>
 
-        <p className="text-center text-xs text-muted-foreground">
-          A portfolio project by Tony Mikityuk
-        </p>
       </div>
     </div>
   );

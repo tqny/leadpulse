@@ -280,6 +280,21 @@
 - [x] Phase 6 (6.1-6.7): About modal, responsive layout, loading/error states, polish, README, Vercel deploy
 - [x] Post-phase polish: hover animations, status-colored KPI cards, editable contact fields, filter UX, Epoxy Bros branding
 - [x] Desktop app (Electron): standalone Next.js server in Electron shell, native macOS titlebar, window state persistence, system notifications, dock badge, auto-launch, splash screen, app menu, esbuild bundling (271MB .app)
+- [x] Clickable stat cards: status cards act as filters with colored glow, multi-select, double-click deselect, syncs with dropdown
+- [x] Dashboard strip: replaced Pipeline Value card with Lost status card, Total Leads auto-selected when no filter active
+- [x] Login page: removed subtitle and portfolio attribution lines
+- [x] Content area background: silver (`#C0C0C0`) for main content area
+- [x] SMS follow-up reminders: Twilio client, Vercel cron endpoint (`/api/cron/daily-followup`), vercel.json cron config, middleware exclusion, settings page info section
+
+---
+
+## Remaining / Next Session
+
+- [ ] Set Twilio env vars in Vercel dashboard (`TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_PHONE`, `TWILIO_TO_PHONE`, `CRON_SECRET`, `SMS_REMINDERS_ENABLED`)
+- [ ] End-to-end test SMS reminders: set a lead's follow_up_date to today, trigger cron, confirm SMS arrives
+- [ ] Verify Vercel cron "Test Cron" button works after deploy
+- [ ] Evaluate silver background (`#C0C0C0`) — may want to adjust or revert after living with it
+- [ ] Pre-existing hydration issue: `<Button>` inside `<DialogTrigger>` in `lead-intake-form.tsx` (line 152) — nested `<button>` elements
 
 ---
 

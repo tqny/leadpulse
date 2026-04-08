@@ -31,7 +31,9 @@ export function LeadFilters() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const currentStatus = searchParams.get("status") ?? undefined;
+  const rawStatus = searchParams.get("status") ?? undefined;
+  const isMultiStatus = rawStatus?.includes(",") ?? false;
+  const currentStatus = isMultiStatus ? undefined : rawStatus;
   const currentSource = searchParams.get("source") ?? undefined;
   const currentFollowUp = searchParams.get("followUp") ?? undefined;
   const currentTimeframe =
@@ -54,7 +56,7 @@ export function LeadFilters() {
   }
 
   const hasFilters = !!(
-    currentStatus ||
+    rawStatus ||
     currentSource ||
     currentFollowUp ||
     (currentTimeframe && currentTimeframe !== "last_month")
@@ -82,12 +84,16 @@ export function LeadFilters() {
       </Select>
 
       <Select
-        value={currentStatus ?? "all"}
-        onValueChange={(v) => setParam("status", v === "all" ? "" : v ?? "")}
+        value={isMultiStatus ? "multi" : (currentStatus ?? "all")}
+        onValueChange={(v) => setParam("status", v === "all" || v === "multi" ? "" : v ?? "")}
       >
         <SelectTrigger className="w-[calc(50%-4px)] sm:w-[160px] border-foreground transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
           <SelectValue>
-            {currentStatus ? STATUS_LABELS[currentStatus as LeadStatus] : "All Statuses"}
+            {isMultiStatus
+              ? `${rawStatus!.split(",").length} Statuses`
+              : currentStatus
+                ? STATUS_LABELS[currentStatus as LeadStatus]
+                : "All Statuses"}
           </SelectValue>
         </SelectTrigger>
         <SelectContent>

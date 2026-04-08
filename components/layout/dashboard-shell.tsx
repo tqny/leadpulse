@@ -35,7 +35,7 @@ export function DashboardShell({ userEmail, children }: DashboardShellProps) {
           userEmail={userEmail}
           onMobileNavToggle={() => setMobileNavOpen(true)}
         />
-        <main className="flex-1 overflow-auto p-3 sm:p-6">{children}</main>
+        <main className="flex-1 overflow-auto p-3 sm:p-6 bg-[#C0C0C0]">{children}</main>
       </div>
     </div>
   );

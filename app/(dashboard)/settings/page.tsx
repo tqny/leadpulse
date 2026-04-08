@@ -1,6 +1,6 @@
 "use client";
 
-import { Phone, Smartphone } from "lucide-react";
+import { Bell, Phone, Smartphone } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   usePhoneProvider,
@@ -97,6 +97,36 @@ export default function SettingsPage() {
             your default dialer.
           </p>
         )}
+      </section>
+
+      {/* ── SMS Follow-Up Reminders ── */}
+      <section className="space-y-3">
+        <div>
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            SMS Follow-Up Reminders
+          </h2>
+          <p className="text-sm text-muted-foreground mt-0.5">
+            Get a daily morning text with leads that need follow-up today.
+          </p>
+        </div>
+
+        <div className="flex items-start gap-3 rounded-lg border border-border bg-card p-4">
+          <Bell className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
+          <div className="space-y-1">
+            <span className="text-sm font-medium text-foreground">
+              Daily SMS Digest
+            </span>
+            <p className="text-xs text-muted-foreground">
+              Every morning at 8&nbsp;AM&nbsp;ET, LeadPulse checks for leads
+              with follow-ups due today and sends a summary text to your phone
+              via Twilio.
+            </p>
+            <p className="text-xs text-muted-foreground mt-2">
+              Configured via environment variables in your Vercel dashboard
+              (Twilio credentials, phone number, and feature toggle).
+            </p>
+          </div>
+        </div>
       </section>
     </div>
   );

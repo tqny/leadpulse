@@ -108,6 +108,25 @@ Field edit ──► updateLeadFields() ──► Supabase server client ──�
 Activity add ──► createActivity() ──► Supabase server client ──► revalidatePath
 ```
 
+### 6. Notification Layer
+
+**Responsibility:** Send daily SMS follow-up reminders to the operator via Twilio.
+
+**Architecture:** Vercel Cron Job (noon UTC / 8 AM ET daily) → API route → Supabase query → Twilio SMS.
+
+**Boundaries:**
+- Cron endpoint is public (excluded from auth middleware), protected by `CRON_SECRET` header verification
+- Uses service role client to bypass RLS (same pattern as Facebook webhook)
+- No npm dependencies — Twilio REST API called via raw `fetch` with Basic auth
+- Feature gated by `SMS_REMINDERS_ENABLED` env var
+
+**Key files:**
+- `lib/twilio/client.ts` — `sendSms()` wrapper (fetch-based, no SDK)
+- `app/api/cron/daily-followup/route.ts` — Cron endpoint (queries leads due today, sends digest SMS)
+- `vercel.json` — Cron schedule configuration
+
+**SMS format:** Count + up to 5 lead names with status + deep link to `/leads?followUp=today`
+
 ## Auth Strategy
 
 ### UI routes
@@ -118,14 +137,21 @@ All routes under `(dashboard)/` are protected by `middleware.ts`. Unauthenticate
 - `/api/intake/parse` — **AUTH-PROTECTED**. Called from the UI by a logged-in user. Uses the user's session for `user_id`.
 - `/api/intake/excel` — **AUTH-PROTECTED**. Called from the import page. Accepts multipart/form-data with `.xlsx` file. Parses headers, validates rows, bulk creates leads. Returns created count + per-row errors.
 - `/api/demo/simulate` — **AUTH-PROTECTED**. Called from the UI. Generates a test payload and calls the webhook handler function directly (not via HTTP).
+- `/api/cron/daily-followup` — **PUBLIC** (excluded from auth middleware). Called by Vercel Cron scheduler. Protected by `CRON_SECRET` header. Uses service role client. Queries leads with `follow_up_date = today`, sends SMS digest via Twilio.
 
 ### Environment Variables
 ```
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_ROLE_KEY=          # For webhook handler (bypasses RLS)
+SUPABASE_SERVICE_ROLE_KEY=          # For webhook + cron handlers (bypasses RLS)
 OWNER_USER_ID=                      # Single operator's auth.users UUID
 FACEBOOK_VERIFY_TOKEN=              # Shared secret for FB webhook verification
+TWILIO_ACCOUNT_SID=                 # Twilio account identifier
+TWILIO_AUTH_TOKEN=                   # Twilio auth secret
+TWILIO_FROM_PHONE=                  # Twilio sender phone number
+TWILIO_TO_PHONE=                    # Operator's phone number (SMS recipient)
+CRON_SECRET=                        # Vercel cron job authentication
+SMS_REMINDERS_ENABLED=              # Feature flag (true/false)
 ```
 
 ## UI Mutation Strategy
@@ -385,8 +411,10 @@ leadpulse/
 │       ├── intake/
 │       │   ├── parse/route.ts        # Text paste parser
 │       │   └── excel/route.ts        # Excel file upload
-│       └── demo/
-│           └── simulate/route.ts     # Demo lead generator
+│       ├── demo/
+│       │   └── simulate/route.ts     # Demo lead generator
+│       └── cron/
+│           └── daily-followup/route.ts  # SMS follow-up reminder (Vercel Cron)
 ├── components/
 │   ├── layout/
 │   │   ├── app-shell.tsx
@@ -426,6 +454,8 @@ leadpulse/
 │   │   └── schemas.ts
 │   ├── db/
 │   │   └── types.ts                  # Manual types + shared const enum arrays
+│   ├── twilio/
+│   │   └── client.ts                 # Twilio SMS sender (fetch-based, no SDK)
 │   └── utils/
 │       ├── urgency.ts                # Response timer calculations
 │       └── format.ts                 # Date/currency formatting

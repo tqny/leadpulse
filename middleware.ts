@@ -37,6 +37,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   if (
     pathname.startsWith("/api/webhooks") ||
+    pathname.startsWith("/api/cron") ||
     pathname.startsWith("/login") ||
     pathname === "/"
   ) {

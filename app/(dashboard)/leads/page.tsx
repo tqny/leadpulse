@@ -29,7 +29,10 @@ export default async function LeadsPage({ searchParams }: LeadsPageProps) {
   const params = await searchParams;
 
   const filters: LeadFilters = {};
-  if (params.status) filters.status = params.status as LeadStatus;
+  if (params.status) {
+    const statuses = params.status.split(",") as LeadStatus[];
+    filters.status = statuses.length === 1 ? statuses[0] : statuses;
+  }
   if (params.source) filters.source = params.source as LeadSource;
   if (params.followUp)
     filters.followUp = params.followUp as "overdue" | "today" | "this_week";
